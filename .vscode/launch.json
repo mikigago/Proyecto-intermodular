@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-KapidoApplication<kapido>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "es.tfg.kapido.KapidoApplication",
+            "projectName": "kapido",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
