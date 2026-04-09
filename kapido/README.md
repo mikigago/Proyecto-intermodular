@@ -35,6 +35,9 @@ El controlador EmpleadoController, en EmpleadoController.java, expone la API RES
 
 Fase 2: Autenticación y Autorización mediante JWT
 
+Vídeo utilizado: 
+https://www.youtube.com/watch?v=-Z4a0bKr2Pg&list=LL&index=1&t=664s
+
 2.0 Configuración del proyecto — pom.xml
 
 Para empezar el proyecto modifiqué el fichero  pom.xml, adapte las dependencias para el tipo de proyecto que quiero plantear, usar SpringBoot como BackEnd, Angular como FrontEnd y MySql como gestor de información. Eliminé las dependencias de Thymeleaf ya que el Front será gestionado por Angular y la persistencia de datos recaerá sobre MySql, importe la libreria de jwt-api, jjwt-impl y jjwt-jackson. Estas librerías permiten generar, firmar y validar los tokens JSON Web Token (JWT) que se utilizarán para autenticar las peticiones HTTP entre Angular y Spring Boot.
