@@ -6,6 +6,7 @@ import es.tfg.kapido.model.Empleado;
 import es.tfg.kapido.service.EmpleadoService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -25,6 +26,7 @@ public class EmpleadoController {
     }
 
     // GET ALL
+    @PreAuthorize("hasAnyAuthority('GESTOR','JEFE_TIENDA')")
     @GetMapping
     public ResponseEntity<List<EmpleadoDTO>> getAll() {
         List<EmpleadoDTO> empleados = empleadoService.findAll()
@@ -36,6 +38,7 @@ public class EmpleadoController {
     }
 
     // GET BY ID
+    @PreAuthorize("hasAnyAuthority('GESTOR','JEFE_TIENDA')")
     @GetMapping("/{id}")
     public ResponseEntity<EmpleadoDTO> getById(@PathVariable long id) {
         Empleado empleado = empleadoService.findById(id);
@@ -43,6 +46,7 @@ public class EmpleadoController {
     }
 
     // CREATE
+    @PreAuthorize("hasAnyAuthority('GESTOR','JEFE_TIENDA')")
     @PostMapping
     public ResponseEntity<EmpleadoDTO> create(@Valid @RequestBody EmpleadoDTO dto) {
         Empleado empleado = empleadoMapper.toEntity(dto);
@@ -54,6 +58,7 @@ public class EmpleadoController {
     }
 
     // UPDATE
+    @PreAuthorize("hasAnyAuthority('GESTOR','JEFE_TIENDA')")
     @PutMapping("/{id}")
     public ResponseEntity<EmpleadoDTO> update(@PathVariable long id,
                                               @Valid @RequestBody EmpleadoDTO dto) {
@@ -65,6 +70,7 @@ public class EmpleadoController {
     }
 
     // DELETE
+    @PreAuthorize("hasAuthority('JEFE_TIENDA')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         empleadoService.delete(id);

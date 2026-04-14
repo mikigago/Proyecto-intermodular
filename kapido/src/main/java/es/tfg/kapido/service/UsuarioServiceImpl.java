@@ -25,7 +25,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         return User.builder()
                 .username(usuario.getEmail())
                 .password(usuario.getPassword())
-                .roles(usuario.getRol().name())  // Spring añade el prefijo ROLE_ automáticamente
+                .authorities(usuario.getRol().name())  // Sin prefijo ROLE_ para que @PreAuthorize funcione
                 .build();
     }
 }

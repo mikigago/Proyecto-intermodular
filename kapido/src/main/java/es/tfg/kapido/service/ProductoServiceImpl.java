@@ -1,5 +1,6 @@
 package es.tfg.kapido.service;
 
+import es.tfg.kapido.exception.ProductoNotFoundException;
 import es.tfg.kapido.model.EstadoProducto;
 import es.tfg.kapido.model.Producto;
 import es.tfg.kapido.repository.ProductoRepository;
@@ -25,7 +26,7 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public Producto findById(Long id) {
         return productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado con id: " + id));
+                .orElseThrow(() -> new ProductoNotFoundException(id));
     }
 
     @Override
