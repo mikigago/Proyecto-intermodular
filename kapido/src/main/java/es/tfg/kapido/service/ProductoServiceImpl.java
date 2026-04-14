@@ -1,9 +1,12 @@
 package es.tfg.kapido.service;
 
 import es.tfg.kapido.exception.ProductoNotFoundException;
+import es.tfg.kapido.model.ConfigAlerta;
 import es.tfg.kapido.model.EstadoProducto;
 import es.tfg.kapido.model.Producto;
+import es.tfg.kapido.repository.ConfigAlertaRepository;
 import es.tfg.kapido.repository.ProductoRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,10 +15,15 @@ import java.util.List;
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
-    private final ProductoRepository productoRepository;
+    private static final int DIAS_AVISO_DEFAULT = 7;
 
-    public ProductoServiceImpl(ProductoRepository productoRepository) {
+    private final ProductoRepository productoRepository;
+    private final ConfigAlertaRepository configAlertaRepository;
+
+    public ProductoServiceImpl(ProductoRepository productoRepository,
+                               ConfigAlertaRepository configAlertaRepository) {
         this.productoRepository = productoRepository;
+        this.configAlertaRepository = configAlertaRepository;
     }
 
     @Override
@@ -56,11 +64,12 @@ public class ProductoServiceImpl implements ProductoService {
         productoRepository.delete(existing);
     }
 
-    // Calcula el estado del producto según su fecha de caducidad y la fecha actual.
-    // Los días de margen de aviso se definirán en la Fase 4 de alertas de momento lo dejo en 7.
+    // Calcula el estado del producto según su fecha de caducidad y los días configurados en ConfigAlerta.
     private EstadoProducto calcularEstado(LocalDate fechaCaducidad) {
         LocalDate hoy = LocalDate.now();
-        int diasAviso = 7; // temporal ! acuerdate
+        int diasAviso = configAlertaRepository.findById(1L)
+                .map(ConfigAlerta::getDiasPrevioAviso)
+                .orElse(DIAS_AVISO_DEFAULT);
 
         if (fechaCaducidad.isBefore(hoy)) {
             return EstadoProducto.CADUCADO;

@@ -93,3 +93,60 @@ Clase DataInitializer. Esta clase implementa CommandLineRunner, lo que hace que 
 
 Incluí los parámetros necesarios de JWT: jwt.secret (la clave secreta de firma, de mínimo 32 caracteres) y jwt.expiration (el tiempo de validez del token en ms, configurado a 86.400.000 ms, equivalente a 24 horas)
 
+-- Corrección de bugs --
+
+Antes de continuar con las siguientes fases, revisé el código y encontré varios problemas:
+
+El primero y más importante era que en UsuarioServiceImpl estaba usando el método .roles() de Spring Security para asignar el rol al usuario autenticado, y ese método añade automáticamente el prefijo ROLE_ al nombre del rol (por ejemplo, GESTOR se convertía en ROLE_GESTOR). El problema es que en ProductoController los @PreAuthorize buscaban exactamente 'GESTOR' y 'JEFE_TIENDA' sin ese prefijo, así que Spring nunca encontraba la coincidencia y devolvía 403 Forbidden aunque el usuario tuviera el rol correcto. Lo solucioné cambiando .roles() por .authorities(), que asigna el nombre tal cual, sin añadir nada.
+
+El segundo bug era que EmpleadoController no tenía ningún control de acceso. Cualquier usuario autenticado, incluso un cajero, podía crear, modificar o eliminar empleados. Añadí @PreAuthorize en todos los endpoints: GET, POST y PUT requieren GESTOR o JEFE_TIENDA, y DELETE solo JEFE_TIENDA.
+
+El tercero era que ProductoServiceImpl lanzaba una RuntimeException genérica cuando no encontraba un producto por id. Eso hacía que GlobalExceptionHandler no pudiera capturarla y devolver un 404 limpio. Creé la clase ProductoNotFoundException (igual que ya existía EmpleadoNotFoundException) y la registré en el manejador global.
+
+3.0 Entidad Producto + CRUD API REST
+
+Con la autenticación funcionando, implementé el módulo central de la aplicación: el registro y gestión de productos con fecha de caducidad.
+
+3.1 Modelo de datos: estado del producto y entidad Producto
+
+Primero creé el enum EstadoProducto con los cuatro estados posibles que puede tener un producto a lo largo de su ciclo de vida en tienda: EN_STOCK (recién llegado y en buen estado), PROXIMO_CADUCAR (dentro del margen de días de aviso), CADUCADO (fecha de caducidad ya superada) y RETIRADO (retirado manualmente del sistema).
+
+La entidad principal es Producto, en Producto.java, que representa la tabla productos en MySQL. Sus campos son: id autogenerado, nombre, numeroLote, codigoBarras (puede ser código de barras o QR), fechaLlegada, fechaCaducidad, estado (por defecto EN_STOCK) y registradoPor, que es una relación Many-to-One con Usuario para saber qué empleado registró cada producto.
+
+3.2 Repositorio de Producto
+
+La interfaz ProductoRepository extiende JpaRepository y añade tres consultas personalizadas que se usarán en las alertas: findByFechaCaducidadBefore() para encontrar productos ya caducados, findByFechaCaducidadBetween() para los próximos a caducar en un rango de fechas, y findByEstado() para filtrar por estado.
+
+3.3 Servicio de Producto
+
+La interfaz ProductoService define los métodos findAll(), findById(), save(), update() y delete(). La implementación en ProductoServiceImpl añade la lógica más importante: el método privado calcularEstado(), que antes de guardar o actualizar cualquier producto compara su fechaCaducidad con la fecha actual y los días configurados en ConfigAlerta para asignar automáticamente el estado correcto. El estado nunca lo envía el cliente, siempre lo calcula el servidor.
+
+3.4 DTO y Mapper de Producto
+
+ProductoDTO es la representación del producto que viaja entre el backend y Angular. Contiene todos los campos visibles más registradoPorId (solo el id del usuario, no el objeto completo) para evitar exponer datos innecesarios. ProductoMapper convierte entre entidad y DTO en ambos sentidos.
+
+3.5 Controlador REST de Producto
+
+ProductoController expone la API bajo /api/productos con control de acceso por rol en cada endpoint: GET (todos o por id) accesible para cualquier usuario autenticado, POST y PUT requieren GESTOR o JEFE_TIENDA, y DELETE solo JEFE_TIENDA. Al crear un producto, el controlador obtiene automáticamente el usuario autenticado del contexto de seguridad de Spring y lo asigna como registradoPor.
+
+3.6 Configuración de alertas: ConfigAlerta
+
+Creé la entidad ConfigAlerta, en ConfigAlerta.java, que representa una tabla de configuración global con un único registro (siempre id = 1). Su único campo relevante es diasPrevioAviso, que determina con cuántos días de antelación se considera que un producto está "próximo a caducar". Al arrancar la aplicación, DataInitializer comprueba si existe ese registro y si no lo crea con 7 días por defecto.
+
+El motivo de usar id = 1 fijo es que esta tabla siempre tendrá una sola fila. No tiene sentido generar ids dinámicos para algo que nunca va a tener más de un registro. Es un patrón habitual para tablas de configuración global.
+
+3.7 Servicio de alertas
+
+AlertaService define cuatro métodos: findProductosProximosACaducar(), findProductosCaducados(), getDiasPrevioAviso() y setDiasPrevioAviso(). La implementación en AlertaServiceImpl lee los días configurados en ConfigAlerta (o usa 7 como fallback si no existe el registro) y usa las queries del ProductoRepository para devolver las listas de productos filtradas. Los productos en estado RETIRADO se excluyen siempre de los resultados.
+
+ProductoServiceImpl también fue actualizado para consultar ConfigAlerta al calcular el estado de cada producto, en lugar del valor 7 que tenía hardcodeado.
+
+3.8 Controlador de alertas
+
+AlertaController expone cuatro endpoints bajo /api/alertas, todos protegidos para GESTOR y JEFE_TIENDA: GET /api/alertas (próximos a caducar), GET /api/alertas/caducados, GET /api/alertas/config (devuelve los días configurados) y PUT /api/alertas/config (actualiza los días, solo JEFE_TIENDA).
+
+4.0 
+
+
+
+
