@@ -145,8 +145,98 @@ ProductoServiceImpl también fue actualizado para consultar ConfigAlerta al calc
 
 AlertaController expone cuatro endpoints bajo /api/alertas, todos protegidos para GESTOR y JEFE_TIENDA: GET /api/alertas (próximos a caducar), GET /api/alertas/caducados, GET /api/alertas/config (devuelve los días configurados) y PUT /api/alertas/config (actualiza los días, solo JEFE_TIENDA).
 
-4.0 
+4.0 Frontend Angular — Kapido
+
+Con el backend completo y funcional, desarrollé el frontend en Angular 21 para consumir la API REST y ofrecer una interfaz de usuario al personal de tienda.
+
+4.1 Estructura del proyecto Angular
+
+El proyecto se generó con Angular CLI y sigue una arquitectura modular feature-based. Las carpetas principales dentro de src/app son:
+
+- core/ — servicios singleton, interceptores, guards y modelos. Todo lo que es transversal a la aplicación.
+- features/ — módulos de funcionalidad: auth (login), dashboard y productos. Cada uno tiene su propio NgModule con lazy loading.
+- shared/ — componentes reutilizables.
+
+4.2 Modelos de datos
+
+Se definieron dos ficheros de modelos TypeScript que mapean exactamente las respuestas del backend:
+
+usuario.model.ts define el tipo RolUsuario ('CAJERO_REPONEDOR' | 'GESTOR' | 'JEFE_TIENDA') y las interfaces LoginRequest y LoginResponse, que representan el cuerpo de la petición de login y la respuesta con el token JWT, el email y el rol.
+
+producto.model.ts define el tipo EstadoProducto con los cuatro valores posibles (EN_STOCK, PROXIMO_CADUCAR, CADUCADO, RETIRADO) y la interfaz Producto con todos sus campos, siendo id, codigoBarras, estado y registradoPorId opcionales.
+
+4.3 Servicios
+
+AuthService gestiona toda la lógica de autenticación: llama al endpoint POST /api/auth/login, almacena el token JWT junto con el email y el rol en localStorage al hacer login, y los elimina al hacer logout. También expone métodos isLoggedIn(), getToken(), getRol() y getEmail() para que el resto de la aplicación pueda consultar el estado de la sesión.
+
+ProductoService centraliza las cinco llamadas HTTP al endpoint /api/productos: getAll(), getById(), create(), update() y delete(). El token JWT se añade automáticamente por el interceptor, por lo que este servicio no necesita gestionar cabeceras manualmente.
+
+AlertaService gesiona las llamadas al endpoint /api/alertas para obtener productos próximos a caducar, productos ya caducados, la configuración de días de aviso y su actualización.
+
+4.4 Interceptor JWT
+
+JwtInterceptor es un HttpInterceptor que se ejecuta automáticamente antes de cada petición HTTP. Lee el token del localStorage y, si existe, lo añade a la cabecera Authorization con el formato Bearer {token}. Así ningún servicio ni componente necesita recordar añadir la cabecera manualmente.
+
+4.5 Guard de autenticación
+
+AuthGuard implementa CanActivate y protege las rutas que requieren login. Comprueba si existe un token en localStorage y, si la ruta tiene la propiedad data.roles definida, verifica además que el rol del usuario esté en la lista permitida. Si alguna comprobación falla, redirige al login.
+
+4.6 Módulo de autenticación (login)
+
+AuthModule carga de forma lazy la ruta /login. El componente LoginComponent presenta un formulario con email y contraseña que llama a AuthService.login(). Si las credenciales son correctas, guarda la sesión y redirige al dashboard. Si el usuario tiene rol CAJERO_REPONEDOR, se le informa de que no tiene acceso a la aplicación web y se cierra la sesión.
+
+4.7 Módulo Dashboard
+
+DashboardModule carga de forma lazy la ruta /dashboard, protegida por AuthGuard para GESTOR y JEFE_TIENDA. DashboardComponent muestra tres secciones: tarjetas de resumen con el número de productos próximos a caducar y caducados, una tabla de productos próximos a caducar y otra de productos ya caducados. Si el usuario es JEFE_TIENDA, aparece adicionalmente un panel para cambiar los días de aviso previo llamando al endpoint PUT /api/alertas/config.
+
+4.8 Módulo de Productos
+
+ProductosModule carga de forma lazy la ruta /productos, también protegida por AuthGuard. Contiene dos componentes:
+
+ProductoListComponent muestra todos los productos en una tabla con su estado coloreado mediante badges. Permite navegar al formulario de edición y, solo si el usuario es JEFE_TIENDA, muestra un botón para eliminar cada producto.
+
+ProductoFormComponent es un formulario reutilizable para crear y editar productos. Si la ruta incluye un parámetro :id, se carga el producto existente (modo edición). Si no, el formulario aparece vacío (modo creación). Los campos obligatorios son nombre, número de lote, fecha de llegada y fecha de caducidad; el código de barras es opcional.
+
+4.9 Configuración del módulo raíz y routing
+
+AppModule registra BrowserModule, el módulo de routing y los providers necesarios. El routing principal en AppRoutingModule define cuatro rutas: la raíz redirige a /login, /login carga AuthModule, /productos carga ProductosModule y /dashboard carga DashboardModule. Las dos últimas usan canActivate con AuthGuard y la propiedad data.roles para controlar el acceso por rol. Cualquier ruta desconocida redirige al login.
+
+-- Corrección de bugs en el Frontend --
+
+Bug 1 — Productos no se mostraban en la vista (HttpClientModule deprecado)
+
+Tras arrancar el frontend, la pantalla de productos se quedaba indefinidamente en el spinner de carga. Examinando el Network del navegador se comprobó que la petición HTTP a /api/productos llegaba correctamente al backend y este respondía con los datos, pero Angular no ejecutaba el callback next del subscribe.
+
+El problema era que en Angular 17+ el uso de HttpClientModule en el array imports del NgModule está deprecado y no inicializa correctamente el sistema de interceptores basado en HTTP_INTERCEPTORS. Lo soluccioné eliminando HttpClientModule de imports y añadiendo provideHttpClient(withInterceptorsFromDi()) al array providers. El método withInterceptorsFromDi() es el que activa la compatibilidad con los interceptores de clase registrados mediante el token HTTP_INTERCEPTORS.
+
+Bug 2 — La vista no se actualizaba aunque los datos llegasen correctamente
+
+Incluso después del fix anterior, los datos llegaban al componente (verificado en consola con console.log) pero el spinner seguía visible y la tabla no aparecía. El motivo era que provideHttpClient ejecuta las respuestas HTTP fuera de la zona de Angular (NgZone), por lo que el ciclo de detección de cambios no se disparaba automáticamente al recibir los datos.
+
+La solución fue inyectar ChangeDetectorRef en ProductoListComponent y llamar a this.cdr.detectChanges() justo después de asignar los datos en el callback next y también en el callback error, forzando así a Angular a revisar y actualizar la vista.
 
 
+-- Corrección de bugs en el Dashboard (16/04/2026) --
 
+Bug 3 — El dashboard se quedaba colgado en "Cargando alertas..." sin mostrar nunca los datos ni ningún error
+
+Al acceder a /dashboard la pantalla mostraba el spinner indefinidamente aunque el backend respondía correctamente a los tres endpoints de alertas (/api/alertas, /api/alertas/caducados y /api/alertas/config).
+
+La causa raíz era doble:
+
+Primero, DashboardComponent lanzaba tres llamadas HTTP independientes con subscribe() separados. La variable cargando solo se ponía a false dentro del callback de la tercera llamada (getCaducados). Si esa petición fallaba silenciosamente o se completaba fuera del orden esperado, el spinner nunca desaparecía y ningún mensaje de error se mostraba al usuario.
+
+Segundo, aunque los datos llegaban correctamente al componente (verificable en la pestaña Network del navegador), Angular 21 utiliza la fetch API internamente para las peticiones HTTP en lugar de XMLHttpRequest. Esto hace que las respuestas lleguen fuera de la zona de Angular (NgZone), por lo que el motor de detección de cambios no se disparaba automáticamente al actualizar las propiedades del componente, y la vista se quedaba congelada en el estado inicial de cargando = true.
+
+La solución se aplicó en dos pasos:
+
+El primero fue sustituir los tres subscribe() independientes por un único forkJoin({ config, proximos, caducados }), que lanza las tres peticiones en paralelo y emite un único resultado cuando todas completan. Esto garantiza que cargando siempre cambia de estado al terminar, tanto si tiene éxito como si falla alguna petición.
+
+El segundo fue añadir el operador finalize() de RxJS en la cadena del observable, que se ejecuta siempre al completarse el stream independientemente del resultado, y dentro de él llamar a this.cdr.detectChanges() (ChangeDetectorRef inyectado en el constructor) para forzar a Angular a revisar y renderizar los cambios en la vista.
+
+Bug 4 — El interceptor JWT no manejaba respuestas de error del servidor
+
+El JwtInterceptor original solo añadía el token a las peticiones salientes pero no gestionaba las respuestas de error. Si el token estaba expirado o era inválido, el backend devolvía 401 o 403 pero el frontend no hacía nada: la petición quedaba colgada o fallaba silenciosamente sin redirigir al usuario al login.
+
+Se añadió un operador catchError() en el interceptor que captura cualquier HttpErrorResponse con status 401 o 403, limpia los datos de sesión del localStorage (token, email y rol) y redirige automáticamente al usuario a /login. Para el resto de errores, relanza el error mediante throwError() para que los componentes puedan gestionarlo con normalidad.
 

@@ -25,28 +25,29 @@ public class DataInitializer implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
         this.configAlertaRepository = configAlertaRepository;
     }
-
+    // Método que se ejecuta al arrancar la aplicación 
+    // y agrega usuarios de prueba si la tabla está vacía
     @Override
     public void run(String... args) {
         if (usuarioRepository.count() == 0) {
             usuarioRepository.save(new Usuario(null, "Cajero Demo",
                     "cajero@kapido.com",
-                    passwordEncoder.encode("cajero123"),
+                    passwordEncoder.encode("1234"),
                     RolUsuario.CAJERO_REPONEDOR, true));
 
             usuarioRepository.save(new Usuario(null, "Gestor Demo",
                     "gestor@kapido.com",
-                    passwordEncoder.encode("gestor123"),
+                    passwordEncoder.encode("1234"),
                     RolUsuario.GESTOR, true));
 
             usuarioRepository.save(new Usuario(null, "Jefe Tienda",
                     "jefe@kapido.com",
-                    passwordEncoder.encode("jefe123"),
+                    passwordEncoder.encode("1234"),
                     RolUsuario.JEFE_TIENDA, true));
 
             System.out.println(">>> Usuarios de prueba creados: cajero / gestor / jefe");
         }
-
+        // Si no hay configuración de alerta, se crea una por defecto con 7 días de aviso previo
         if (configAlertaRepository.count() == 0) {
             configAlertaRepository.save(new ConfigAlerta(1L, 7));
             System.out.println(">>> ConfigAlerta creada: 7 días de aviso previo");

@@ -1,0 +1,102 @@
+<div class="form-wrapper">
+  <div class="form-card card shadow-sm">
+
+    <!-- Título -->
+    <div class="card-header">
+      <h4 class="mb-0">{{ modoEdicion ? 'Editar Producto' : 'Nuevo Producto' }}</h4>
+    </div>
+
+    <div class="card-body">
+
+      <!-- Spinner de carga -->
+      <div class="text-center py-4" *ngIf="cargando">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <form (ngSubmit)="guardar()" #productoForm="ngForm" *ngIf="!cargando">
+
+        <!-- Error global -->
+        <div class="alert alert-danger mb-3" *ngIf="error">
+          {{ error }}
+        </div>
+
+        <!-- Nombre -->
+        <div class="mb-3">
+          <label class="form-label">Nombre <span class="text-danger">*</span></label>
+          <input
+            type="text"
+            class="form-control"
+            name="nombre"
+            [(ngModel)]="producto.nombre"
+            placeholder="Ej: Leche entera 1L"
+            required />
+        </div>
+
+        <!-- Número de lote -->
+        <div class="mb-3">
+          <label class="form-label">Número de Lote <span class="text-danger">*</span></label>
+          <input
+            type="text"
+            class="form-control"
+            name="numeroLote"
+            [(ngModel)]="producto.numeroLote"
+            placeholder="Ej: LOTE-2024-001"
+            required />
+        </div>
+
+        <!-- Código de barras -->
+        <div class="mb-3">
+          <label class="form-label">Código de Barras</label>
+          <input
+            type="text"
+            class="form-control"
+            name="codigoBarras"
+            [(ngModel)]="producto.codigoBarras"
+            placeholder="Ej: 8410128003884" />
+        </div>
+
+        <!-- Fecha de llegada -->
+        <div class="mb-3">
+          <label class="form-label">Fecha de Llegada <span class="text-danger">*</span></label>
+          <input
+            type="date"
+            class="form-control"
+            name="fechaLlegada"
+            [(ngModel)]="producto.fechaLlegada"
+            required />
+        </div>
+
+        <!-- Fecha de caducidad -->
+        <div class="mb-3">
+          <label class="form-label">Fecha de Caducidad <span class="text-danger">*</span></label>
+          <input
+            type="date"
+            class="form-control"
+            name="fechaCaducidad"
+            [(ngModel)]="producto.fechaCaducidad"
+            required />
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex gap-2 mt-4">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="guardando">
+            {{ guardando ? 'Guardando...' : (modoEdicion ? 'Guardar cambios' : 'Crear producto') }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="cancelar()">
+            Cancelar
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

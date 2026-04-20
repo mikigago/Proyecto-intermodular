@@ -1,0 +1,8 @@
+.container-fluid {
+  max-width: 1200px;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}

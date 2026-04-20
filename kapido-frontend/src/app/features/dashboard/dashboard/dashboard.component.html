@@ -1,0 +1,161 @@
+<div class="container-fluid py-4">
+
+  <!-- Cabecera -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="mb-0">Dashboard</h2>
+      <small class="text-muted">{{ email }} — {{ rol }}</small>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-primary" (click)="irAProductos()" *ngIf="!esCajero()">
+        Ver todos los productos
+      </button>
+      <button class="btn btn-outline-secondary" (click)="cerrarSesion()">
+        Cerrar sesión
+      </button>
+    </div>
+  </div>
+
+  <!-- Error global -->
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <!-- Spinner de carga -->
+  <div class="text-center py-5" *ngIf="cargando">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2 text-muted">Cargando alertas...</p>
+  </div>
+
+  <div *ngIf="!cargando">
+
+    <!-- Tarjetas de resumen -->
+    <div class="row mb-4">
+      <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card border-0 shadow-sm resumen-card naranja">
+          <div class="card-body">
+            <div class="resumen-numero">{{ proximosACaducar.length }}</div>
+            <div class="resumen-label">Próximos a caducar</div>
+            <small class="text-muted">En los próximos {{ diasAviso }} días</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-3">
+        <div class="card border-0 shadow-sm resumen-card rojo">
+          <div class="card-body">
+            <div class="resumen-numero">{{ caducados.length }}</div>
+            <div class="resumen-label">Caducados</div>
+            <small class="text-muted">Deben ser retirados</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuración de días de aviso (solo JEFE_TIENDA) -->
+    <div class="card shadow-sm mb-4" *ngIf="esTienda()">
+      <div class="card-header">
+        <h5 class="mb-0">Configuración de Alertas</h5>
+      </div>
+      <div class="card-body">
+        <div class="d-flex align-items-end gap-3">
+          <div>
+            <label class="form-label mb-1">Días de aviso previo a la caducidad</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="nuevosDias"
+              min="1"
+              style="width: 120px" />
+          </div>
+          <button
+            class="btn btn-primary"
+            (click)="guardarConfig()"
+            [disabled]="guardandoConfig">
+            {{ guardandoConfig ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+        <div class="mt-2">
+          <span class="text-success" *ngIf="mensajeConfig && !mensajeConfig.includes('Error')">
+            {{ mensajeConfig }}
+          </span>
+          <span class="text-danger" *ngIf="mensajeConfig && mensajeConfig.includes('Error')">
+            {{ mensajeConfig }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla: Próximos a caducar -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <span class="badge badge-proximo-caducar me-2">{{ proximosACaducar.length }}</span>
+          Productos próximos a caducar
+        </h5>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Nº Lote</th>
+              <th>Código de Barras</th>
+              <th>Fecha Caducidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="proximosACaducar.length === 0">
+              <td colspan="4" class="text-center text-muted py-3">
+                No hay productos próximos a caducar.
+              </td>
+            </tr>
+            <tr *ngFor="let p of proximosACaducar">
+              <td>{{ p.nombre }}</td>
+              <td>{{ p.numeroLote }}</td>
+              <td>{{ p.codigoBarras || '—' }}</td>
+              <td class="text-warning fw-semibold">{{ p.fechaCaducidad }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tabla: Caducados -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <span class="badge badge-caducado me-2">{{ caducados.length }}</span>
+          Productos caducados
+        </h5>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Nº Lote</th>
+              <th>Código de Barras</th>
+              <th>Fecha Caducidad</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="caducados.length === 0">
+              <td colspan="4" class="text-center text-muted py-3">
+                No hay productos caducados.
+              </td>
+            </tr>
+            <tr *ngFor="let p of caducados">
+              <td>{{ p.nombre }}</td>
+              <td>{{ p.numeroLote }}</td>
+              <td>{{ p.codigoBarras || '—' }}</td>
+              <td class="text-danger fw-semibold">{{ p.fechaCaducidad }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

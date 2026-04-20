@@ -6,11 +6,11 @@ import es.tfg.kapido.model.EstadoProducto;
 import es.tfg.kapido.model.Producto;
 import es.tfg.kapido.repository.ConfigAlertaRepository;
 import es.tfg.kapido.repository.ProductoRepository;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductoServiceImpl implements ProductoService {
@@ -33,8 +33,11 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Producto findById(Long id) {
-        return productoRepository.findById(id)
-                .orElseThrow(() -> new ProductoNotFoundException(id));
+        Optional<Producto> optProducto = productoRepository.findById(id);
+        if (!optProducto.isPresent()) {
+            throw new ProductoNotFoundException(id);
+        }
+        return optProducto.get();
     }
 
     @Override
@@ -67,9 +70,13 @@ public class ProductoServiceImpl implements ProductoService {
     // Calcula el estado del producto según su fecha de caducidad y los días configurados en ConfigAlerta.
     private EstadoProducto calcularEstado(LocalDate fechaCaducidad) {
         LocalDate hoy = LocalDate.now();
-        int diasAviso = configAlertaRepository.findById(1L)
-                .map(ConfigAlerta::getDiasPrevioAviso)
-                .orElse(DIAS_AVISO_DEFAULT);
+        int diasAviso;
+        Optional<ConfigAlerta> optConfig = configAlertaRepository.findById(1L);
+        if (optConfig.isPresent()) {
+            diasAviso = optConfig.get().getDiasPrevioAviso();
+        } else {
+            diasAviso = DIAS_AVISO_DEFAULT;
+        }
 
         if (fechaCaducidad.isBefore(hoy)) {
             return EstadoProducto.CADUCADO;

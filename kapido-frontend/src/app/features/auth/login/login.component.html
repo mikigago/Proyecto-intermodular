@@ -1,0 +1,58 @@
+<div class="login-wrapper">
+  <div class="card login-card shadow">
+
+    <div class="card-body p-4">
+
+      <!-- Logo / Título -->
+      <div class="text-center mb-4">
+        <h2 class="fw-bold text-success">KAPIDO</h2>
+        <p class="text-muted">K-Expiration Control</p>
+      </div>
+
+      <!-- Formulario -->
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            [(ngModel)]="email"
+            placeholder="usuario@kapido.com"
+            required>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            [(ngModel)]="password"
+            placeholder="••••••••"
+            required>
+        </div>
+
+        <!-- Mensaje de error -->
+        <div *ngIf="errorMessage" class="alert alert-danger py-2">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Botón -->
+        <div class="d-grid mt-3">
+          <button type="submit" class="btn btn-success" [disabled]="cargando">
+            <span *ngIf="cargando">Entrando...</span>
+            <span *ngIf="!cargando">Entrar</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>

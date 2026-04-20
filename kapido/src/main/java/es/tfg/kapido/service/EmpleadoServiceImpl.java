@@ -7,6 +7,7 @@ import es.tfg.kapido.service.EmpleadoService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmpleadoServiceImpl implements EmpleadoService {
@@ -24,8 +25,11 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public Empleado findById(long id) {
-        return empleadoRepository.findById(id)
-                .orElseThrow(() -> new EmpleadoNotFoundException(id));
+        Optional<Empleado> optEmpleado = empleadoRepository.findById(id);
+        if (!optEmpleado.isPresent()) {
+            throw new EmpleadoNotFoundException(id);
+        }
+        return optEmpleado.get();
     }
 
     @Override

@@ -4,13 +4,15 @@ import es.tfg.kapido.dto.ProductoDTO;
 import es.tfg.kapido.mapper.ProductoMapper;
 import es.tfg.kapido.model.ConfigAlerta;
 import es.tfg.kapido.model.EstadoProducto;
+import es.tfg.kapido.model.Producto;
 import es.tfg.kapido.repository.ConfigAlertaRepository;
 import es.tfg.kapido.repository.ProductoRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class AlertaServiceImpl implements AlertaService {
@@ -35,33 +37,46 @@ public class AlertaServiceImpl implements AlertaService {
         LocalDate hoy = LocalDate.now();
         LocalDate limite = hoy.plusDays(getDiasPrevioAviso());
 
-        return productoRepository.findByFechaCaducidadBetween(hoy, limite)
-                .stream()
-                .filter(p -> p.getEstado() != EstadoProducto.RETIRADO)
-                .map(productoMapper::toDTO)
-                .collect(Collectors.toList());
+        List<Producto> todos = productoRepository.findByFechaCaducidadBetween(hoy, limite);
+        List<ProductoDTO> resultado = new ArrayList<>();
+        for (Producto p : todos) {
+            if (p.getEstado() != EstadoProducto.RETIRADO) {
+                resultado.add(productoMapper.toDTO(p));
+            }
+        }
+        return resultado;
     }
 
     @Override
     public List<ProductoDTO> findProductosCaducados() {
-        return productoRepository.findByFechaCaducidadBefore(LocalDate.now())
-                .stream()
-                .filter(p -> p.getEstado() != EstadoProducto.RETIRADO)
-                .map(productoMapper::toDTO)
-                .collect(Collectors.toList());
+        List<Producto> todos = productoRepository.findByFechaCaducidadBefore(LocalDate.now());
+        List<ProductoDTO> resultado = new ArrayList<>();
+        for (Producto p : todos) {
+            if (p.getEstado() != EstadoProducto.RETIRADO) {
+                resultado.add(productoMapper.toDTO(p));
+            }
+        }
+        return resultado;
     }
 
     @Override
     public int getDiasPrevioAviso() {
-        return configAlertaRepository.findById(CONFIG_ID)
-                .map(ConfigAlerta::getDiasPrevioAviso)
-                .orElse(DIAS_AVISO_DEFAULT);
+        Optional<ConfigAlerta> optConfig = configAlertaRepository.findById(CONFIG_ID);
+        if (optConfig.isPresent()) {
+            return optConfig.get().getDiasPrevioAviso();
+        }
+        return DIAS_AVISO_DEFAULT;
     }
 
     @Override
     public void setDiasPrevioAviso(int dias) {
-        ConfigAlerta config = configAlertaRepository.findById(CONFIG_ID)
-                .orElse(new ConfigAlerta(CONFIG_ID, DIAS_AVISO_DEFAULT));
+        ConfigAlerta config;
+        Optional<ConfigAlerta> optConfig = configAlertaRepository.findById(CONFIG_ID);
+        if (optConfig.isPresent()) {
+            config = optConfig.get();
+        } else {
+            config = new ConfigAlerta(CONFIG_ID, DIAS_AVISO_DEFAULT);
+        }
         config.setDiasPrevioAviso(dias);
         configAlertaRepository.save(config);
     }
