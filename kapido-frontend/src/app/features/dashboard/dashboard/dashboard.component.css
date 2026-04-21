@@ -1,24 +1,532 @@
-.resumen-card {
-  border-left: 4px solid transparent;
+/* ── Layout ── */
+.kap-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f0f2f5;
+  font-family: 'Montserrat', sans-serif;
 }
 
-.resumen-card.naranja {
-  border-left-color: #fd7e14;
+/* ── Sidebar ── */
+.kap-sidebar {
+  width: 230px;
+  min-width: 230px;
+  background: #152d45;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
 }
 
-.resumen-card.rojo {
-  border-left-color: #dc3545;
+.kap-brand {
+  padding: 28px 24px 20px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
-.resumen-numero {
-  font-size: 2.5rem;
-  font-weight: 700;
+.kap-brand-name {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -1px;
   line-height: 1;
 }
 
-.resumen-label {
+.kap-brand-k {
+  color: #00c9a7;
+}
+
+.kap-brand-text {
+  color: #ffffff;
+}
+
+.kap-brand-subtitle {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #a0aec0;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.kap-nav {
+  flex: 1;
+  padding: 16px 0;
+}
+
+.kap-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  color: #a0aec0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  cursor: pointer;
+}
+
+.kap-nav-item:hover {
+  background: rgba(255,255,255,0.06);
+  color: #ffffff;
+}
+
+.kap-nav-item.active {
+  background: rgba(0, 201, 167, 0.15);
+  color: #00c9a7;
+  border-left: 3px solid #00c9a7;
+}
+
+.kap-nav-icon {
+  font-size: 1rem;
+}
+
+.kap-sidebar-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(200, 83, 83, 0.07);
+}
+
+.kap-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.kap-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #00c9a7;
+  color: #0d1b2a;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kap-user-email {
+  color: #e2e8f0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+.kap-user-rol {
+  color: #718096;
+  font-size: 0.72rem;
+}
+
+.kap-logout-btn {
+  width: 100%;
+  padding: 8px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #a0aec0;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.kap-logout-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: #ffffff;
+}
+
+/* ── Main ── */
+.kap-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.kap-header {
+  background: #ffffff;
+  padding: 24px 32px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.kap-page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0d1b2a;
+  margin: 0;
+}
+
+.kap-page-subtitle {
+  font-size: 0.85rem;
+  color: #718096;
+  margin: 2px 0 0;
+}
+
+.kap-content {
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── Spinner ── */
+.kap-spinner-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 0;
+}
+
+.kap-spinner {
+  color: #00c9a7;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.kap-spinner-text {
+  margin-top: 12px;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+/* ── Stat Cards ── */
+.kap-cards-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.kap-stat-card {
+  flex: 1;
+  min-width: 180px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  border-left: 5px solid transparent;
+}
+
+.kap-stat-warning { border-left-color: #f6ad55; }
+.kap-stat-danger  { border-left-color: #fc8181; }
+.kap-stat-info    { border-left-color: #63b3ed; }
+.kap-stat-stock   { border-left-color: #00c9a7; }
+.kap-stat-lost    { border-left-color: #b794f4; }
+
+.kap-stat-icon {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+
+.kap-stat-warning .kap-stat-icon { color: #ed8936; }
+.kap-stat-danger  .kap-stat-icon { color: #e53e3e; }
+.kap-stat-info    .kap-stat-icon { color: #3182ce; }
+
+.kap-stat-number {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #0d1b2a;
+}
+
+.kap-stat-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-top: 3px;
+}
+
+.kap-stat-sub {
+  font-size: 0.76rem;
+  color: #a0aec0;
+  margin-top: 2px;
+}
+
+/* ── Panels ── */
+.kap-panel {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.kap-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
   font-size: 0.95rem;
   font-weight: 600;
-  margin-top: 4px;
-  margin-bottom: 2px;
+  color: #2d3748;
+  background: #f7fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.kap-panel-header-warning {
+  background: #fffaf0;
+  border-bottom-color: #f6e05e;
+  color: #744210;
+}
+
+.kap-panel-header-danger {
+  background: #fff5f5;
+  border-bottom-color: #feb2b2;
+  color: #742a2a;
+}
+
+.kap-panel-header-stock {
+  background: #f0fdf9;
+  border-bottom-color: #00c9a7;
+  color: #065f46;
+}
+
+.kap-panel-icon {
+  font-size: 1.1rem;
+}
+
+.kap-panel-body {
+  padding: 20px 24px;
+}
+
+.kap-panel-body.p-0 {
+  padding: 0;
+}
+
+/* ── Badges ── */
+.kap-badge {
+  margin-left: auto;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.kap-badge-warning {
+  background: #fefcbf;
+  color: #744210;
+}
+
+.kap-badge-danger {
+  background: #fed7d7;
+  color: #742a2a;
+}
+
+.kap-badge-stock {
+  background: #d1faf3;
+  color: #065f46;
+}
+
+/* ── Table ── */
+.kap-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.kap-table thead tr {
+  background: #f7fafc;
+}
+
+.kap-table th {
+  padding: 11px 20px;
+  text-align: left;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #718096;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.kap-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid #f0f2f5;
+  color: #2d3748;
+}
+
+.kap-table tbody tr:hover td {
+  background: #f7fafc;
+}
+
+.kap-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.kap-table-empty {
+  text-align: center;
+  color: #a0aec0;
+  padding: 28px !important;
+  font-style: italic;
+}
+
+.kap-date-warning {
+  background: #fefcbf;
+  color: #744210;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.83rem;
+}
+
+.kap-date-danger {
+  background: #fed7d7;
+  color: #742a2a;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.83rem;
+}
+
+/* ── Config ── */
+.kap-config-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.kap-config-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.kap-config-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kap-input {
+  width: 100px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #2d3748;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.kap-input:focus {
+  border-color: #00c9a7;
+}
+
+.kap-btn-primary {
+  padding: 8px 20px;
+  background: #00c9a7;
+  color: #0d1b2a;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.kap-btn-primary:hover {
+  background: #00b397;
+}
+
+.kap-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.kap-config-msg {
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+/* ── Stock chips en tablas ── */
+.kap-stock-chip {
+  display: inline-block;
+  padding: 2px 10px;
+  background: #d1faf3;
+  color: #065f46;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.kap-stock-warn {
+  background: #fefcbf;
+  color: #744210;
+}
+
+.kap-stock-lost {
+  background: #fed7d7;
+  color: #822727;
+}
+
+.kap-stock-perdido-resumen {
+  display: flex;
+  gap: 24px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f7e0e0;
+  background: #fff5f5;
+  flex-wrap: wrap;
+}
+
+.kap-stock-perdido-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kap-stock-perdido-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #822727;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kap-stat-perdido-desglose {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.kap-stat-perdido-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.kap-stat-perdido-num {
+  font-size: 2.2rem;
+  color: #0d1b2a;
+}
+
+.kap-stat-perdido-tipo {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #a0aec0;
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kap-stat-perdido-sep {
+  width: 1px;
+  height: 28px;
+  background: #e2e8f0;
+}
+
+.kap-stock-na {
+  color: #cbd5e0;
+  font-size: 0.85rem;
 }

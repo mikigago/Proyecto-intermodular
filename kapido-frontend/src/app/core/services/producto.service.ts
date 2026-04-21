@@ -33,4 +33,8 @@ export class ProductoService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(this.apiUrl + '/' + id);
   }
+
+  registrarVenta(id: number, cantidad: number): Observable<Producto> {
+    return this.http.patch<Producto>(this.apiUrl + '/' + id + '/venta', { cantidad });
+  }
 }

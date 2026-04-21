@@ -9,4 +9,7 @@ export interface Producto {
   fechaCaducidad: string;
   estado?: EstadoProducto;
   registradoPorId?: number;
+  cantidadInicial?: number;
+  cantidadActual?: number;
+  tipoUnidad?: string;
 }

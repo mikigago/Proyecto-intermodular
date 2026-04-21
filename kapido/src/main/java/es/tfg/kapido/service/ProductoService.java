@@ -15,4 +15,6 @@ public interface ProductoService {
     Producto update(Long id, Producto producto);
 
     void delete(Long id);
+
+    Producto registrarVenta(Long id, int cantidad);
 }

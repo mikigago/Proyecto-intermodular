@@ -1,102 +1,113 @@
-<div class="form-wrapper">
-  <div class="form-card card shadow-sm">
+<div class="kap-layout">
 
-    <!-- Título -->
-    <div class="card-header">
-      <h4 class="mb-0">{{ modoEdicion ? 'Editar Producto' : 'Nuevo Producto' }}</h4>
+  <!-- Barra lateral -->
+  <aside class="kap-sidebar">
+    <div class="kap-brand">
+      <div class="kap-brand-name">
+        <span class="kap-brand-k">K</span>
+        <span class="kap-brand-text">apido</span>
+      </div>
+      <div class="kap-brand-subtitle">Expiration Control</div>
     </div>
+    <nav class="kap-nav">
+      <a class="kap-nav-item" (click)="cancelar()" style="cursor:pointer">Dashboard</a>
+      <a class="kap-nav-item active">Productos</a>
+    </nav>
+  </aside>
 
-    <div class="card-body">
+  <!-- Contenido principal -->
+  <main class="kap-main">
 
-      <!-- Spinner de carga -->
-      <div class="text-center py-4" *ngIf="cargando">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Cargando...</span>
+    <header class="kap-header">
+      <div>
+        <h1 class="kap-page-title">{{ modoEdicion ? 'Editar Producto' : 'Nuevo Producto' }}</h1>
+        <p class="kap-page-subtitle">{{ modoEdicion ? 'Modifica los datos del producto' : 'Rellena los datos para registrar un nuevo producto' }}</p>
+      </div>
+    </header>
+
+    <div class="kap-content">
+
+      <!-- Spinner -->
+      <div class="kap-spinner-wrapper" *ngIf="cargando">
+        <div class="spinner-border kap-spinner" role="status"></div>
+        <p class="kap-spinner-text">Cargando producto...</p>
+      </div>
+
+      <div class="kap-panel" *ngIf="!cargando">
+        <div class="kap-panel-header">Datos del producto</div>
+        <div class="kap-panel-body">
+
+          <div class="alert alert-danger mb-4" *ngIf="error">{{ error }}</div>
+
+          <form (ngSubmit)="guardar()" #productoForm="ngForm">
+            <div class="kap-form-grid">
+
+              <div class="kap-field kap-field-full">
+                <label class="kap-label">Nombre <span class="kap-required">*</span></label>
+                <input type="text" class="kap-input" name="nombre" [(ngModel)]="producto.nombre"
+                  placeholder="Ej: Leche entera 1L" required />
+              </div>
+
+              <div class="kap-field">
+                <label class="kap-label">Categoría</label>
+                <select class="kap-input kap-select" name="categoria" [(ngModel)]="categoria" (ngModelChange)="onCategoriaChange($event)">
+                  <option value="">Sin categoría</option>
+                  <option *ngFor="let c of categorias" [value]="c.valor">{{ c.etiqueta }}</option>
+                </select>
+              </div>
+
+              <div class="kap-field">
+                <label class="kap-label">Número de Lote <span class="kap-required">*</span></label>
+                <input type="text" class="kap-input" name="numeroLote" [(ngModel)]="producto.numeroLote"
+                  placeholder="Ej: L-001" required (input)="onLoteInput($event)" />
+              </div>
+
+              <div class="kap-field">
+                <label class="kap-label">Código de Barras</label>
+                <div class="kap-input-with-btn">
+                  <input type="text" class="kap-input" name="codigoBarras" [(ngModel)]="producto.codigoBarras"
+                    placeholder="Ej: 8410128003884" maxlength="13" pattern="[0-9]{0,13}" />
+                  <button type="button" class="kap-btn-generate" (click)="generarCodigoBarras()" title="Autogenerar código EAN-13"><span [class.spinning]="generando">↻</span></button>
+                </div>
+              </div>
+
+              <div class="kap-field">
+                <label class="kap-label">Unidades en el lote <span class="kap-required">*</span></label>
+                <div class="kap-input-with-btn">
+                  <input type="number" class="kap-input" name="cantidadInicial" [(ngModel)]="producto.cantidadInicial"
+                    placeholder="Ej: 1-199" min="1" [required]="!modoEdicion" />
+                  <select class="kap-select kap-unit-select" name="tipoUnidad" [(ngModel)]="tipoUnidad">
+                    <option value="unidades">ud.</option>
+                    <option value="packs">pack</option>
+                    <option value="kilogramos">Kg</option>
+                  </select>
+                </div>
+                <span class="kap-field-hint" *ngIf="!modoEdicion">Número de unidades que llegan con este lote</span>
+              </div>
+
+              <div class="kap-field">
+                <label class="kap-label">Fecha de Llegada <span class="kap-required">*</span></label>
+                <input type="date" class="kap-input" name="fechaLlegada" [(ngModel)]="producto.fechaLlegada" required />
+              </div>
+
+              <div class="kap-field">
+                <label class="kap-label">Fecha de Caducidad <span class="kap-required">*</span></label>
+                <input type="date" class="kap-input" name="fechaCaducidad" [(ngModel)]="producto.fechaCaducidad" required />
+              </div>
+
+            </div>
+
+            <div class="kap-form-actions">
+              <button type="submit" class="kap-btn-primary" [disabled]="guardando">
+                {{ guardando ? 'Guardando...' : (modoEdicion ? 'Guardar cambios' : 'Crear producto') }}
+              </button>
+              <button type="button" class="kap-btn-secondary" (click)="cancelar()">Cancelar</button>
+            </div>
+          </form>
+
         </div>
       </div>
 
-      <!-- Formulario -->
-      <form (ngSubmit)="guardar()" #productoForm="ngForm" *ngIf="!cargando">
-
-        <!-- Error global -->
-        <div class="alert alert-danger mb-3" *ngIf="error">
-          {{ error }}
-        </div>
-
-        <!-- Nombre -->
-        <div class="mb-3">
-          <label class="form-label">Nombre <span class="text-danger">*</span></label>
-          <input
-            type="text"
-            class="form-control"
-            name="nombre"
-            [(ngModel)]="producto.nombre"
-            placeholder="Ej: Leche entera 1L"
-            required />
-        </div>
-
-        <!-- Número de lote -->
-        <div class="mb-3">
-          <label class="form-label">Número de Lote <span class="text-danger">*</span></label>
-          <input
-            type="text"
-            class="form-control"
-            name="numeroLote"
-            [(ngModel)]="producto.numeroLote"
-            placeholder="Ej: LOTE-2024-001"
-            required />
-        </div>
-
-        <!-- Código de barras -->
-        <div class="mb-3">
-          <label class="form-label">Código de Barras</label>
-          <input
-            type="text"
-            class="form-control"
-            name="codigoBarras"
-            [(ngModel)]="producto.codigoBarras"
-            placeholder="Ej: 8410128003884" />
-        </div>
-
-        <!-- Fecha de llegada -->
-        <div class="mb-3">
-          <label class="form-label">Fecha de Llegada <span class="text-danger">*</span></label>
-          <input
-            type="date"
-            class="form-control"
-            name="fechaLlegada"
-            [(ngModel)]="producto.fechaLlegada"
-            required />
-        </div>
-
-        <!-- Fecha de caducidad -->
-        <div class="mb-3">
-          <label class="form-label">Fecha de Caducidad <span class="text-danger">*</span></label>
-          <input
-            type="date"
-            class="form-control"
-            name="fechaCaducidad"
-            [(ngModel)]="producto.fechaCaducidad"
-            required />
-        </div>
-
-        <!-- Botones -->
-        <div class="d-flex gap-2 mt-4">
-          <button
-            type="submit"
-            class="btn btn-primary"
-            [disabled]="guardando">
-            {{ guardando ? 'Guardando...' : (modoEdicion ? 'Guardar cambios' : 'Crear producto') }}
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            (click)="cancelar()">
-            Cancelar
-          </button>
-        </div>
-
-      </form>
     </div>
-  </div>
+  </main>
 </div>

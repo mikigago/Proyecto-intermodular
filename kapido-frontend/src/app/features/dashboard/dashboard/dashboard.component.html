@@ -1,161 +1,245 @@
-<div class="container-fluid py-4">
+<div class="kap-layout">
 
-  <!-- Cabecera -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h2 class="mb-0">Dashboard</h2>
-      <small class="text-muted">{{ email }} — {{ rol }}</small>
+  <!-- Barra lateral -->
+  <aside class="kap-sidebar">
+    <div class="kap-brand">
+      <div class="kap-brand-name">
+        <span class="kap-brand-k">K</span>
+        <span class="kap-brand-text">apido</span>
+      </div>
+      <div class="kap-brand-subtitle">Expiration Control</div>
     </div>
-    <div class="d-flex gap-2">
-      <button class="btn btn-outline-primary" (click)="irAProductos()" *ngIf="!esCajero()">
-        Ver todos los productos
-      </button>
-      <button class="btn btn-outline-secondary" (click)="cerrarSesion()">
-        Cerrar sesión
-      </button>
+    <nav class="kap-nav">
+      <a class="kap-nav-item active">
+        Dashboard
+      </a>
+      <a class="kap-nav-item" (click)="irAProductos()" style="cursor:pointer">
+        Productos
+      </a>
+    </nav>
+    <div class="kap-sidebar-footer">
+      <div class="kap-user-info">
+        <div class="kap-user-avatar">{{ email.charAt(0).toUpperCase() }}</div>
+        <div>
+          <div class="kap-user-email">{{ email }}</div>
+          <div class="kap-user-rol">{{ rol }}</div>
+        </div>
+      </div>
+      <button class="kap-logout-btn" (click)="cerrarSesion()">Cerrar sesión</button>
     </div>
-  </div>
+  </aside>
 
-  <!-- Error global -->
-  <div class="alert alert-danger" *ngIf="error">
-    {{ error }}
-  </div>
+  <!-- Contenido principal -->
+  <main class="kap-main">
 
-  <!-- Spinner de carga -->
-  <div class="text-center py-5" *ngIf="cargando">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
+    <!-- Cabecera -->
+    <header class="kap-header">
+      <div>
+        <h1 class="kap-page-title">Panel de control</h1>
+        <p class="kap-page-subtitle">Control de caducidad de productos</p>
+      </div>
+    </header>
+
+    <!-- Error global -->
+    <div class="alert alert-danger mx-4" *ngIf="error">{{ error }}</div>
+
+    <!-- Spinner -->
+    <div class="kap-spinner-wrapper" *ngIf="cargando">
+      <div class="spinner-border kap-spinner" role="status"></div>
+      <p class="kap-spinner-text">Cargando datos...</p>
     </div>
-    <p class="mt-2 text-muted">Cargando alertas...</p>
-  </div>
 
-  <div *ngIf="!cargando">
+    <div *ngIf="!cargando" class="kap-content">
 
-    <!-- Tarjetas de resumen -->
-    <div class="row mb-4">
-      <div class="col-md-6 col-lg-3 mb-3">
-        <div class="card border-0 shadow-sm resumen-card naranja">
-          <div class="card-body">
-            <div class="resumen-numero">{{ proximosACaducar.length }}</div>
-            <div class="resumen-label">Próximos a caducar</div>
-            <small class="text-muted">En los próximos {{ diasAviso }} días</small>
+      <!-- Tarjetas de resumen -->
+      <div class="kap-cards-row">
+        <div class="kap-stat-card kap-stat-info" *ngIf="esTienda()">
+          <div class="kap-stat-body">
+            <div class="kap-stat-number">{{ diasAviso }}</div>
+            <div class="kap-stat-label">Días de aviso</div>
+            <div class="kap-stat-sub">Configuración actual</div>
+          </div>
+        </div>
+        <div class="kap-stat-card kap-stat-stock">
+          <div class="kap-stat-body">
+            <div class="kap-stat-number">{{ enStock.length }}</div>
+            <div class="kap-stat-label">En stock</div>
+            <div class="kap-stat-sub">Productos en buen estado</div>
+          </div>
+        </div>
+        <div class="kap-stat-card kap-stat-warning">
+          <div class="kap-stat-body">
+            <div class="kap-stat-number">{{ proximosACaducar.length }}</div>
+            <div class="kap-stat-label">Próximos a caducar</div>
+            <div class="kap-stat-sub">En los próximos {{ diasAviso }} días</div>
+          </div>
+        </div>
+        <div class="kap-stat-card kap-stat-danger">
+          <div class="kap-stat-body">
+            <div class="kap-stat-number">{{ caducados.length }}</div>
+            <div class="kap-stat-label">Caducados</div>
+            <div class="kap-stat-sub">Deben ser retirados</div>
+          </div>
+        </div>
+        <div class="kap-stat-card kap-stat-lost">
+          <div class="kap-stat-body">
+            <div class="kap-stat-perdido-desglose">
+              <div class="kap-stat-perdido-item">
+                <div class="kap-stat-number kap-stat-perdido-num">{{ stockPerdidoUnidades }}</div>
+                <div class="kap-stat-perdido-tipo">ud.</div>
+              </div>
+              <div class="kap-stat-perdido-sep"></div>
+              <div class="kap-stat-perdido-item">
+                <div class="kap-stat-number kap-stat-perdido-num">{{ stockPerdidoPacks }}</div>
+                <div class="kap-stat-perdido-tipo">pack</div>
+              </div>
+              <div class="kap-stat-perdido-sep"></div>
+              <div class="kap-stat-perdido-item">
+                <div class="kap-stat-number kap-stat-perdido-num">{{ stockPerdidoKg }}</div>
+                <div class="kap-stat-perdido-tipo">Kg</div>
+              </div>
+            </div>
+            <div class="kap-stat-label">Stock perdido</div>
+            <div class="kap-stat-sub">Unidades caducadas o retiradas</div>
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-lg-3 mb-3">
-        <div class="card border-0 shadow-sm resumen-card rojo">
-          <div class="card-body">
-            <div class="resumen-numero">{{ caducados.length }}</div>
-            <div class="resumen-label">Caducados</div>
-            <small class="text-muted">Deben ser retirados</small>
+
+      <!-- Panel configuración (solo JEFE_TIENDA) -->
+      <div class="kap-panel" *ngIf="esTienda()">
+        <div class="kap-panel-header">
+          Configuración de alertas
+        </div>
+        <div class="kap-panel-body">
+          <div class="kap-config-row">
+            <label class="kap-config-label">Días de aviso previo a la caducidad</label>
+            <div class="kap-config-controls">
+              <input type="number" class="kap-input" [(ngModel)]="nuevosDias" min="1" />
+              <button class="kap-btn-primary" (click)="guardarConfig()" [disabled]="guardandoConfig">
+                {{ guardandoConfig ? 'Guardando...' : 'Actualizar' }}
+              </button>
+            </div>
+          </div>
+          <div class="kap-config-msg" *ngIf="mensajeConfig">
+            <span [class]="mensajeConfig.includes('Error') ? 'text-danger' : 'text-success'">{{ mensajeConfig }}</span>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Configuración de días de aviso (solo JEFE_TIENDA) -->
-    <div class="card shadow-sm mb-4" *ngIf="esTienda()">
-      <div class="card-header">
-        <h5 class="mb-0">Configuración de Alertas</h5>
-      </div>
-      <div class="card-body">
-        <div class="d-flex align-items-end gap-3">
-          <div>
-            <label class="form-label mb-1">Días de aviso previo a la caducidad</label>
-            <input
-              type="number"
-              class="form-control"
-              [(ngModel)]="nuevosDias"
-              min="1"
-              style="width: 120px" />
-          </div>
-          <button
-            class="btn btn-primary"
-            (click)="guardarConfig()"
-            [disabled]="guardandoConfig">
-            {{ guardandoConfig ? 'Guardando...' : 'Guardar' }}
-          </button>
+      <!-- Tabla: En stock -->
+      <div class="kap-panel">
+        <div class="kap-panel-header kap-panel-header-stock">
+          Productos en stock
+          <span class="kap-badge kap-badge-stock">{{ enStock.length }}</span>
         </div>
-        <div class="mt-2">
-          <span class="text-success" *ngIf="mensajeConfig && !mensajeConfig.includes('Error')">
-            {{ mensajeConfig }}
-          </span>
-          <span class="text-danger" *ngIf="mensajeConfig && mensajeConfig.includes('Error')">
-            {{ mensajeConfig }}
-          </span>
+        <div class="kap-panel-body p-0">
+          <table class="kap-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Nº Lote</th>
+                <th>Código de Barras</th>
+                <th>Fecha Caducidad</th>
+                <th>Stock restante</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="enStock.length === 0">
+                <td colspan="5" class="kap-table-empty">No hay productos en stock.</td>
+              </tr>
+              <tr *ngFor="let p of enStock">
+                <td class="fw-semibold">{{ p.nombre }}</td>
+                <td>{{ p.numeroLote }}</td>
+                <td>{{ p.codigoBarras || '—' }}</td>
+                <td>{{ p.fechaCaducidad }}</td>
+                <td>
+                  <span *ngIf="p.cantidadActual != null" class="kap-stock-chip">
+                    {{ p.cantidadActual }} / {{ p.cantidadInicial }} {{ getUnidadLabel(p.tipoUnidad) }}
+                  </span>
+                  <span *ngIf="p.cantidadActual == null" class="kap-stock-na">—</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
 
-    <!-- Tabla: Próximos a caducar -->
-    <div class="card shadow-sm mb-4">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">
-          <span class="badge badge-proximo-caducar me-2">{{ proximosACaducar.length }}</span>
-          Productos próximos a caducar
-        </h5>
+      <!-- Tabla: Próximos a caducar -->
+      <div class="kap-panel">
+        <div class="kap-panel-header kap-panel-header-warning">
+          Próximos a caducar
+          <span class="kap-badge kap-badge-warning">{{ proximosACaducar.length }}</span>
+        </div>
+        <div class="kap-panel-body p-0">
+          <table class="kap-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Nº Lote</th>
+                <th>Código de Barras</th>
+                <th>Fecha Caducidad</th>
+                <th>Stock restante</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="proximosACaducar.length === 0">
+                <td colspan="5" class="kap-table-empty">Sin productos próximos a caducar &#10003;</td>
+              </tr>
+              <tr *ngFor="let p of proximosACaducar">
+                <td class="fw-semibold">{{ p.nombre }}</td>
+                <td>{{ p.numeroLote }}</td>
+                <td>{{ p.codigoBarras || '—' }}</td>
+                <td>{{ p.fechaCaducidad }}</td>
+                <td>
+                  <span *ngIf="p.cantidadActual != null" class="kap-stock-chip kap-stock-warn">
+                    {{ p.cantidadActual }} / {{ p.cantidadInicial }} {{ getUnidadLabel(p.tipoUnidad) }}
+                  </span>
+                  <span *ngIf="p.cantidadActual == null" class="kap-stock-na">—</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-          <thead class="table-light">
-            <tr>
-              <th>Nombre</th>
-              <th>Nº Lote</th>
-              <th>Código de Barras</th>
-              <th>Fecha Caducidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="proximosACaducar.length === 0">
-              <td colspan="4" class="text-center text-muted py-3">
-                No hay productos próximos a caducar.
-              </td>
-            </tr>
-            <tr *ngFor="let p of proximosACaducar">
-              <td>{{ p.nombre }}</td>
-              <td>{{ p.numeroLote }}</td>
-              <td>{{ p.codigoBarras || '—' }}</td>
-              <td class="text-warning fw-semibold">{{ p.fechaCaducidad }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-    <!-- Tabla: Caducados -->
-    <div class="card shadow-sm mb-4">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">
-          <span class="badge badge-caducado me-2">{{ caducados.length }}</span>
+      <!-- Tabla: Caducados -->
+      <div class="kap-panel">
+        <div class="kap-panel-header kap-panel-header-danger">
           Productos caducados
-        </h5>
+          <span class="kap-badge kap-badge-danger">{{ caducados.length }}</span>
+        </div>
+        <div class="kap-panel-body p-0">
+          <table class="kap-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Nº Lote</th>
+                <th>Código de Barras</th>
+                <th>Fecha Caducidad</th>
+                <th>Stock perdido</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="caducados.length === 0">
+                <td colspan="5" class="kap-table-empty">Sin productos caducados &#10003;</td>
+              </tr>
+              <tr *ngFor="let p of caducados">
+                <td class="fw-semibold">{{ p.nombre }}</td>
+                <td>{{ p.numeroLote }}</td>
+                <td>{{ p.codigoBarras || '—' }}</td>
+                <td>{{ p.fechaCaducidad }}</td>
+                <td>
+                  <span *ngIf="p.cantidadActual != null" class="kap-stock-chip kap-stock-lost">
+                    {{ p.cantidadActual }} {{ getUnidadLabel(p.tipoUnidad) }}
+                  </span>
+                  <span *ngIf="p.cantidadActual == null" class="kap-stock-na">—</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-          <thead class="table-light">
-            <tr>
-              <th>Nombre</th>
-              <th>Nº Lote</th>
-              <th>Código de Barras</th>
-              <th>Fecha Caducidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngIf="caducados.length === 0">
-              <td colspan="4" class="text-center text-muted py-3">
-                No hay productos caducados.
-              </td>
-            </tr>
-            <tr *ngFor="let p of caducados">
-              <td>{{ p.nombre }}</td>
-              <td>{{ p.numeroLote }}</td>
-              <td>{{ p.codigoBarras || '—' }}</td>
-              <td class="text-danger fw-semibold">{{ p.fechaCaducidad }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
-  </div>
+    </div>
+  </main>
 </div>

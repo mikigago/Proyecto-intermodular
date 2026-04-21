@@ -57,6 +57,9 @@ public class ProductoServiceImpl implements ProductoService {
         existing.setFechaLlegada(producto.getFechaLlegada());
         existing.setFechaCaducidad(producto.getFechaCaducidad());
         existing.setEstado(calcularEstado(producto.getFechaCaducidad()));
+        existing.setCantidadInicial(producto.getCantidadInicial());
+        existing.setCantidadActual(producto.getCantidadActual());
+        existing.setTipoUnidad(producto.getTipoUnidad());
 
         return productoRepository.save(existing);
     }
@@ -65,6 +68,27 @@ public class ProductoServiceImpl implements ProductoService {
     public void delete(Long id) {
         Producto existing = findById(id);
         productoRepository.delete(existing);
+    }
+
+    @Override
+    public Producto registrarVenta(Long id, int cantidad) {
+        if (cantidad < 1) {
+            throw new IllegalArgumentException("La cantidad debe ser mayor que 0.");
+        }
+        Producto existing = findById(id);
+        if (existing.getCantidadActual() == null) {
+            throw new IllegalStateException("Este producto no tiene cantidad de stock registrada.");
+        }
+        int nueva = existing.getCantidadActual() - cantidad;
+        if (nueva < 0) {
+            throw new IllegalArgumentException(
+                "Stock insuficiente. Stock actual: " + existing.getCantidadActual() + " unidades.");
+        }
+        existing.setCantidadActual(nueva);
+        if (nueva == 0) {
+            existing.setEstado(EstadoProducto.RETIRADO);
+        }
+        return productoRepository.save(existing);
     }
 
     // Calcula el estado del producto según su fecha de caducidad y los días configurados en ConfigAlerta.

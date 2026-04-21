@@ -12,11 +12,11 @@ const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
   },
 
-  // Módulo de productos (requiere estar autenticado como GESTOR o JEFE_TIENDA)
+  // Módulo de productos (requiere estar autenticado)
   {
     path: 'productos',
     canActivate: [AuthGuard],
-    data: { roles: ['GESTOR', 'JEFE_TIENDA'] },
+    data: { roles: ['CAJERO_REPONEDOR', 'GESTOR', 'JEFE_TIENDA'] },
     loadChildren: () => import('./features/productos/productos.module').then(m => m.ProductosModule)
   },
 

@@ -10,12 +10,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 import es.tfg.kapido.dto.ProductoDTO;
 import es.tfg.kapido.mapper.ProductoMapper;
@@ -94,5 +97,18 @@ public class ProductoController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productoService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // Solo el CAJERO_REPONEDOR puede registrar ventas (descuenta stock del lote)
+    @PreAuthorize("hasAuthority('CAJERO_REPONEDOR')")
+    @PatchMapping("/{id}/venta")
+    public ResponseEntity<ProductoDTO> registrarVenta(@PathVariable Long id,
+                                                       @RequestBody Map<String, Integer> body) {
+        Integer cantidad = body.get("cantidad");
+        if (cantidad == null || cantidad < 1) {
+            return ResponseEntity.badRequest().build();
+        }
+        Producto updated = productoService.registrarVenta(id, cantidad);
+        return ResponseEntity.ok(productoMapper.toDTO(updated));
     }
 }

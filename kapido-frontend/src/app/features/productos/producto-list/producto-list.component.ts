@@ -18,6 +18,12 @@ export class ProductoListComponent implements OnInit {
   cargando: boolean = false;
   error: string = '';
   rol: string = '';
+  email: string = '';
+
+  // Estado del panel inline de venta
+  ventaProductoId: number | null = null;
+  cantidadVenta: number = 1;
+  ventaGuardando: boolean = false;
 
   constructor(
     private productoService: ProductoService,
@@ -28,6 +34,7 @@ export class ProductoListComponent implements OnInit {
 
   ngOnInit(): void {
     this.rol = this.authService.getRol() || '';
+    this.email = this.authService.getEmail() || '';
     this.cargarProductos();
   }
 
@@ -49,6 +56,10 @@ export class ProductoListComponent implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  irADashboard(): void {
+    this.router.navigate(['/dashboard']);
   }
 
   irANuevo(): void {
@@ -77,6 +88,43 @@ export class ProductoListComponent implements OnInit {
     return this.rol === 'JEFE_TIENDA';
   }
 
+  esCajero(): boolean {
+    return this.rol === 'CAJERO_REPONEDOR';
+  }
+
+  // ── Venta inline ──────────────────────────────
+  abrirVenta(id: number): void {
+    this.ventaProductoId = id;
+    this.cantidadVenta = 1;
+    this.error = '';
+  }
+
+  cancelarVenta(): void {
+    this.ventaProductoId = null;
+  }
+
+  confirmarVenta(id: number): void {
+    if (this.cantidadVenta < 1) return;
+    this.ventaGuardando = true;
+    this.error = '';
+    this.productoService.registrarVenta(id, this.cantidadVenta).subscribe({
+      next: (updated) => {
+        const idx = this.productos.findIndex(p => p.id === id);
+        if (idx !== -1) this.productos[idx] = updated;
+        this.ventaProductoId = null;
+        this.ventaGuardando = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.error = (typeof err.error === 'string' ? err.error : null)
+          || err.error?.message
+          || 'Error al registrar la venta. Comprueba el stock disponible.';
+        this.ventaGuardando = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   getBadgeClass(estado: EstadoProducto | undefined): string {
     if (estado === 'EN_STOCK') {
       return 'badge badge-en-stock';
@@ -101,6 +149,15 @@ export class ProductoListComponent implements OnInit {
       return 'Retirado';
     }
     return 'Desconocido';
+  }
+
+  getUnidadLabel(tipoUnidad: string | undefined): string {
+    if (tipoUnidad === 'kilogramos') {
+      return 'Kg';
+    } else if (tipoUnidad === 'packs') {
+      return 'pack';
+    }
+    return 'ud.';
   }
 
   cerrarSesion(): void {

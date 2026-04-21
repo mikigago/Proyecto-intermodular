@@ -201,6 +201,16 @@ ProductoFormComponent es un formulario reutilizable para crear y editar producto
 
 AppModule registra BrowserModule, el módulo de routing y los providers necesarios. El routing principal en AppRoutingModule define cuatro rutas: la raíz redirige a /login, /login carga AuthModule, /productos carga ProductosModule y /dashboard carga DashboardModule. Las dos últimas usan canActivate con AuthGuard y la propiedad data.roles para controlar el acceso por rol. Cualquier ruta desconocida redirige al login.
 
+4.10 Estilos: Bootstrap 5 y sistema de clases propio
+
+Para los estilos del frontend se optó por Bootstrap 5.3 como librería base. Se instaló como dependencia npm (bootstrap: ^5.3.8) y se importa globalmente en styles.css, lo que hace que sus clases utilitarias estén disponibles en todos los componentes sin necesidad de importarla individualmente.
+
+Bootstrap se usa principalmente para clases utilitarias puntuales: fw-semibold para texto en negrita, spinner-border para el spinner de carga, alert y alert-danger para los mensajes de error, y p-0 para eliminar el padding interno de los paneles de tabla.
+
+Sin embargo, la mayor parte del diseño visual de la aplicación no usa los componentes de Bootstrap directamente sino un sistema de clases CSS propio con el prefijo kap-, definido en el archivo CSS de cada componente. Este prefijo actúa como espacio de nombres para evitar colisiones con Bootstrap u otras librerías. Las clases propias cubren el layout general (kap-layout, kap-sidebar, kap-main), las tarjetas de resumen del dashboard (kap-stat-card, kap-stat-warning, kap-stat-danger...), los paneles de tabla (kap-panel, kap-panel-header, kap-table), los badges de estado de producto (kap-badge, badge-en-stock, badge-caducado...) y los chips de stock (kap-stock-chip, kap-stock-warn, kap-stock-lost).
+
+Esta combinación permite aprovechar las utilidades y el sistema de reset de Bootstrap sin depender de sus componentes visuales, manteniendo un diseño propio y consistente en toda la aplicación.
+
 -- Corrección de bugs en el Frontend --
 
 Bug 1 — Productos no se mostraban en la vista (HttpClientModule deprecado)
@@ -239,4 +249,15 @@ Bug 4 — El interceptor JWT no manejaba respuestas de error del servidor
 El JwtInterceptor original solo añadía el token a las peticiones salientes pero no gestionaba las respuestas de error. Si el token estaba expirado o era inválido, el backend devolvía 401 o 403 pero el frontend no hacía nada: la petición quedaba colgada o fallaba silenciosamente sin redirigir al usuario al login.
 
 Se añadió un operador catchError() en el interceptor que captura cualquier HttpErrorResponse con status 401 o 403, limpia los datos de sesión del localStorage (token, email y rol) y redirige automáticamente al usuario a /login. Para el resto de errores, relanza el error mediante throwError() para que los componentes puedan gestionarlo con normalidad.
+
+
+-- Mejoras del Dashboard (21/04/2026) --
+
+Mejora 1 — Tarjeta de resumen: Stock perdido
+
+Se añadió una nueva tarjeta de resumen al panel de control del dashboard que muestra el total de unidades de stock perdido. La propiedad stockPerdido se calcula en DashboardComponent sumando el campo cantidadActual de todos los productos cuyo estado es CADUCADO o RETIRADO. El cálculo se realiza en el mismo forkJoin que ya cargaba el resto de datos, sin llamada adicional al backend. La tarjeta se muestra con un borde morado para distinguirla visualmente de las demás y el subtexto "Unidades caducadas o retiradas".
+
+Mejora 2 — Columna "Stock perdido" en la tabla de Productos caducados
+
+Se añadió la columna Stock perdido a la tabla de productos caducados del dashboard. Por cada producto caducado se muestra el valor de cantidadActual (las unidades que quedaban en stock en el momento de la caducidad) dentro de un chip de color rojo (kap-stock-lost). Si el producto no tiene cantidad registrada, se muestra un guión. El colspan del mensaje de "sin productos" se actualizó de 4 a 5 para cubrir la nueva columna.
 

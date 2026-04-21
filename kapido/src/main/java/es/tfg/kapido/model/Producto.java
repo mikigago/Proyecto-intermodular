@@ -41,6 +41,15 @@ public class Producto {
     @Column(nullable = false)
     private EstadoProducto estado = EstadoProducto.EN_STOCK;
 
+    // Cantidad inicial de unidades al registrar el lote
+    private Integer cantidadInicial;
+
+    // Cantidad actual de unidades restantes en tienda
+    private Integer cantidadActual;
+
+    // Tipo de unidad: unidades, packs, kilogramos
+    private String tipoUnidad;
+
     // Usuario que registró el producto (relación Many-to-One)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")

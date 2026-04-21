@@ -22,4 +22,7 @@ public class ProductoDTO {
     private LocalDate fechaCaducidad;
     private EstadoProducto estado;
     private Long registradoPorId;
+    private Integer cantidadInicial;
+    private Integer cantidadActual;
+    private String tipoUnidad;
 }

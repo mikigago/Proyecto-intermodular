@@ -17,6 +17,9 @@ public class ProductoMapper {
         dto.setFechaLlegada(producto.getFechaLlegada());
         dto.setFechaCaducidad(producto.getFechaCaducidad());
         dto.setEstado(producto.getEstado());
+        dto.setCantidadInicial(producto.getCantidadInicial());
+        dto.setCantidadActual(producto.getCantidadActual());
+        dto.setTipoUnidad(producto.getTipoUnidad());
         if (producto.getRegistradoPor() != null) {
             dto.setRegistradoPorId(producto.getRegistradoPor().getId());
         }
@@ -31,6 +34,9 @@ public class ProductoMapper {
         producto.setCodigoBarras(dto.getCodigoBarras());
         producto.setFechaLlegada(dto.getFechaLlegada());
         producto.setFechaCaducidad(dto.getFechaCaducidad());
+        producto.setCantidadInicial(dto.getCantidadInicial());
+        producto.setCantidadActual(dto.getCantidadActual());
+        producto.setTipoUnidad(dto.getTipoUnidad());
         if (dto.getEstado() != null) {
             producto.setEstado(dto.getEstado());
         }
