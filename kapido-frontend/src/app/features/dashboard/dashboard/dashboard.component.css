@@ -118,8 +118,11 @@
 }
 
 .kap-user-rol {
-  color: #718096;
   font-size: 0.72rem;
+  color: #00c9a7;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .kap-logout-btn {
@@ -524,6 +527,25 @@
   width: 1px;
   height: 28px;
   background: #e2e8f0;
+}
+
+/* ── Vendidos / Agotados ── */
+.kap-stat-sold { border-left-color: #4299e1; }
+
+.kap-panel-header-sold {
+  background: #ebf8ff;
+  border-bottom-color: #90cdf4;
+  color: #1a365d;
+}
+
+.kap-badge-sold {
+  background: #bee3f8;
+  color: #1a365d;
+}
+
+.kap-stock-sold {
+  background: #bee3f8;
+  color: #1a365d;
 }
 
 .kap-stock-na {

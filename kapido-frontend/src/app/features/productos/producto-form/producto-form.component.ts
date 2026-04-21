@@ -122,9 +122,8 @@ export class ProductoFormComponent implements OnInit {
       this.error = 'Por favor, rellena todos los campos obligatorios.';
       return;
     }
-
-    // Al crear, la cantidad actual arranca igual que la inicial
-    if (!this.modoEdicion && this.producto.cantidadInicial != null) {
+    // La cantidad actual siempre se sincroniza con la inicial al crear o editar el lote
+    if (this.producto.cantidadInicial != null) {
       this.producto.cantidadActual = this.producto.cantidadInicial;
     }
 

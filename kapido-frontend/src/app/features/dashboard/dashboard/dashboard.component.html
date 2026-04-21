@@ -11,7 +11,7 @@
     </div>
     <nav class="kap-nav">
       <a class="kap-nav-item active">
-        Dashboard
+        Panel de control
       </a>
       <a class="kap-nav-item" (click)="irAProductos()" style="cursor:pointer">
         Productos
@@ -151,7 +151,7 @@
                 <td class="fw-semibold">{{ p.nombre }}</td>
                 <td>{{ p.numeroLote }}</td>
                 <td>{{ p.codigoBarras || '—' }}</td>
-                <td>{{ p.fechaCaducidad }}</td>
+                <td>{{ p.fechaCaducidad | date:'dd/MM/yyyy' }}</td>
                 <td>
                   <span *ngIf="p.cantidadActual != null" class="kap-stock-chip">
                     {{ p.cantidadActual }} / {{ p.cantidadInicial }} {{ getUnidadLabel(p.tipoUnidad) }}
@@ -189,7 +189,7 @@
                 <td class="fw-semibold">{{ p.nombre }}</td>
                 <td>{{ p.numeroLote }}</td>
                 <td>{{ p.codigoBarras || '—' }}</td>
-                <td>{{ p.fechaCaducidad }}</td>
+                <td>{{ p.fechaCaducidad | date:'dd/MM/yyyy' }}</td>
                 <td>
                   <span *ngIf="p.cantidadActual != null" class="kap-stock-chip kap-stock-warn">
                     {{ p.cantidadActual }} / {{ p.cantidadInicial }} {{ getUnidadLabel(p.tipoUnidad) }}
@@ -227,12 +227,49 @@
                 <td class="fw-semibold">{{ p.nombre }}</td>
                 <td>{{ p.numeroLote }}</td>
                 <td>{{ p.codigoBarras || '—' }}</td>
-                <td>{{ p.fechaCaducidad }}</td>
+                <td>{{ p.fechaCaducidad | date:'dd/MM/yyyy' }}</td>
                 <td>
                   <span *ngIf="p.cantidadActual != null" class="kap-stock-chip kap-stock-lost">
                     {{ p.cantidadActual }} {{ getUnidadLabel(p.tipoUnidad) }}
                   </span>
                   <span *ngIf="p.cantidadActual == null" class="kap-stock-na">—</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tabla: Productos vendidos (vendidos completamente) -->
+      <div class="kap-panel">
+        <div class="kap-panel-header kap-panel-header-sold">
+          Productos vendidos
+          <span class="kap-badge kap-badge-sold">{{ vendidos.length }}</span>
+        </div>
+        <div class="kap-panel-body p-0">
+          <table class="kap-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Nº Lote</th>
+                <th>Código de Barras</th>
+                <th>Fecha Caducidad</th>
+                <th>Stock vendido</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="vendidos.length === 0">
+                <td colspan="5" class="kap-table-empty">No hay lotes agotados &#10003;</td>
+              </tr>
+              <tr *ngFor="let p of vendidos">
+                <td class="fw-semibold">{{ p.nombre }}</td>
+                <td>{{ p.numeroLote }}</td>
+                <td>{{ p.codigoBarras || '—' }}</td>
+                <td>{{ p.fechaCaducidad | date:'dd/MM/yyyy' }}</td>
+                <td>
+                  <span class="kap-stock-chip kap-stock-sold">
+                    0 / {{ p.cantidadInicial }} {{ getUnidadLabel(p.tipoUnidad) }}
+                  </span>
                 </td>
               </tr>
             </tbody>

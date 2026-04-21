@@ -34,10 +34,10 @@ public class AlertaServiceImpl implements AlertaService {
 
     @Override
     public List<ProductoDTO> findProductosProximosACaducar() {
-        LocalDate hoy = LocalDate.now();
-        LocalDate limite = hoy.plusDays(getDiasPrevioAviso());
+        LocalDate manana = LocalDate.now().plusDays(1);
+        LocalDate limite = LocalDate.now().plusDays(getDiasPrevioAviso());
 
-        List<Producto> todos = productoRepository.findByFechaCaducidadBetween(hoy, limite);
+        List<Producto> todos = productoRepository.findByFechaCaducidadBetween(manana, limite);
         List<ProductoDTO> resultado = new ArrayList<>();
         for (Producto p : todos) {
             if (p.getEstado() != EstadoProducto.RETIRADO) {
@@ -49,7 +49,7 @@ public class AlertaServiceImpl implements AlertaService {
 
     @Override
     public List<ProductoDTO> findProductosCaducados() {
-        List<Producto> todos = productoRepository.findByFechaCaducidadBefore(LocalDate.now());
+        List<Producto> todos = productoRepository.findByFechaCaducidadBefore(LocalDate.now().plusDays(1));
         List<ProductoDTO> resultado = new ArrayList<>();
         for (Producto p : todos) {
             if (p.getEstado() != EstadoProducto.RETIRADO) {

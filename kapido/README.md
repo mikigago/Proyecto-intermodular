@@ -261,3 +261,46 @@ Mejora 2 — Columna "Stock perdido" en la tabla de Productos caducados
 
 Se añadió la columna Stock perdido a la tabla de productos caducados del dashboard. Por cada producto caducado se muestra el valor de cantidadActual (las unidades que quedaban en stock en el momento de la caducidad) dentro de un chip de color rojo (kap-stock-lost). Si el producto no tiene cantidad registrada, se muestra un guión. El colspan del mensaje de "sin productos" se actualizó de 4 a 5 para cubrir la nueva columna.
 
+
+-- Mejoras y correcciones adicionales (21/04/2026) --
+
+Mejora 3 — Rediseño de la tarjeta "Stock perdido" con desglose por tipo de unidad
+
+La tarjeta de resumen de Stock perdido se rediseñó para mostrar el stock perdido desglosado en tres cifras: unidades (ud.), packs y kilogramos (Kg), en lugar de un único total. El cálculo en DashboardComponent recorre los productos CADUCADO o RETIRADO y acumula la cantidad en stockPerdidoUnidades, stockPerdidoPacks o stockPerdidoKg según el campo tipoUnidad de cada producto. Las tres cifras se muestran en el mismo tamaño tipográfico grande (2.2rem) que las otras tarjetas de resumen, con el color #0d1b2a, separadas por divisores verticales.
+
+Mejora 4 — Orden de las tarjetas de resumen del dashboard
+
+Se reordenaron las tarjetas de resumen del panel de control para seguir una lectura lógica de estado del inventario: Días de aviso → En stock → Próximos a caducar → Caducados → Stock perdido.
+
+Mejora 5 — Bloque de usuario (avatar, email, rol) en la barra lateral de Productos
+
+Se añadió un bloque de información del usuario autenticado en el pie de la barra lateral del componente ProductoListComponent, igual al que ya existía en el dashboard. El bloque muestra un avatar circular con la inicial del email, el email completo y el rol. Los estilos (kap-user-info, kap-user-avatar, kap-user-email, kap-user-rol) se añadieron al archivo CSS del componente, y la propiedad email: string se añadió al TypeScript, cargada desde AuthService.getEmail() en ngOnInit().
+
+Mejora 6 — Estilo del rol de usuario unificado entre dashboard y productos
+
+El estilo de la etiqueta de rol en la barra lateral del dashboard se actualizó para coincidir con el de la vista de Productos: color teal (#00c9a7), font-weight 600 y texto en mayúsculas (text-transform: uppercase).
+
+Mejora 7 — Formato de fechas europeo (dd/MM/yyyy) en todas las tablas
+
+Todas las columnas de fecha (Fecha de Llegada y Fecha de Caducidad) en los componentes ProductoListComponent, DashboardComponent y sus tablas asociadas usan ahora el pipe de Angular con el formato 'dd/MM/yyyy', mostrando las fechas en el formato europeo estándar en lugar del formato ISO por defecto.
+
+Corrección 1 — Productos duplicados entre "En stock" y "Próximos a caducar"
+
+Se detectó que productos con estado EN_STOCK pero con fecha de caducidad dentro del margen de aviso aparecían simultáneamente en la tabla "En stock" y en la tabla "Próximos a caducar" del dashboard.
+
+La solución se aplicó en dos niveles:
+
+En el backend (AlertaServiceImpl) se corrigió el rango de fechas para eliminar el solapamiento: findProductosProximosACaducar() ahora busca productos cuya fechaCaducidad está entre mañana (hoy+1) y hoy+N días, nunca hoy. findProductosCaducados() usa fechaCaducidadBefore(LocalDate.now().plusDays(1)) para incluir los productos que caducan hoy como caducados, no como próximos.
+
+En el frontend (DashboardComponent) se añadió una segunda capa de deduplicación: se construyen dos Set con los ids de los productos devueltos por los endpoints de próximos y caducados, y la lista enStock se filtra para excluir cualquier producto cuyo id esté en alguno de esos dos sets.
+
+Corrección 2 — El formulario de edición no actualizaba el stock
+
+En el formulario ProductoFormComponent, al editar un producto, la cantidad visible en la lista de productos (/productos) no se actualizaba aunque se guardaran los cambios. La causa era que el formulario solo tenía binding sobre cantidadInicial pero no sobre cantidadActual. El backend recibía el nuevo valor de cantidadInicial pero el campo cantidadActual se enviaba con el valor original sin cambios.
+
+La solución fue unificar el comportamiento: en guardar(), antes de enviar la petición, se asigna siempre this.producto.cantidadActual = this.producto.cantidadInicial, tanto en modo creación como en modo edición. De esta forma al actualizar el lote la cantidad disponible refleja las nuevas unidades introducidas.
+
+Mejora 8 — Tabla "Lotes agotados" en el dashboard
+
+Se añadió una nueva sección al final del dashboard: la tabla "Lotes agotados". En ella aparecen los productos cuyo estado es RETIRADO y cuya cantidadActual es 0, es decir, los lotes que se han vendido completamente. Esto los distingue visualmente de los productos caducados (que también tienen estado RETIRADO pero por fecha). La tabla muestra Nombre, Nº Lote, Código de Barras, Fecha de Caducidad y Stock vendido (0 / cantidadInicial unidad). El diseño usa un esquema de color azul (kap-stat-sold, kap-panel-header-sold, kap-badge-sold, kap-stock-sold) para diferenciarlo del resto de tablas.
+

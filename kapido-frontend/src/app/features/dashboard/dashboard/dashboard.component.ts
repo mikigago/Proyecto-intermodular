@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
   proximosACaducar: Producto[] = [];
   caducados: Producto[] = [];
   enStock: Producto[] = [];
+  vendidos: Producto[] = [];
   stockPerdido: number = 0;
   stockPerdidoUnidades: number = 0;
   stockPerdidoPacks: number = 0;
@@ -68,7 +69,28 @@ export class DashboardComponent implements OnInit {
         this.nuevosDias = config.diasPrevioAviso;
         this.proximosACaducar = proximos;
         this.caducados = caducados;
-        this.enStock = todos.filter(p => p.estado === 'EN_STOCK');
+
+        const proximosIds: Set<number> = new Set<number>();
+        for (let i = 0; i < proximos.length; i++) {
+          if (proximos[i].id != null) {
+            proximosIds.add(proximos[i].id as number);
+          }
+        }
+        const caducadosIds: Set<number> = new Set<number>();
+        for (let i = 0; i < caducados.length; i++) {
+          if (caducados[i].id != null) {
+            caducadosIds.add(caducados[i].id as number);
+          }
+        }
+        this.enStock = todos.filter(p =>
+          p.estado === 'EN_STOCK' &&
+          !proximosIds.has(p.id as number) &&
+          !caducadosIds.has(p.id as number)
+        );
+
+        this.vendidos = todos.filter(p =>
+          p.estado === 'RETIRADO' && (p.cantidadActual ?? 0) === 0
+        );
 
         const perdidos = todos.filter(p => p.estado === 'CADUCADO' || p.estado === 'RETIRADO');
         this.stockPerdido = 0;

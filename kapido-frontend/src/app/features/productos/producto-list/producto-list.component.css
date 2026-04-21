@@ -56,6 +56,42 @@
   border-top: 1px solid rgba(255,255,255,0.07);
 }
 
+.kap-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.kap-user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #00c9a7;
+  color: #0d1b2a;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kap-user-email {
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.kap-user-rol {
+  font-size: 0.72rem;
+  color: #00c9a7;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .kap-logout-btn {
   width: 100%;
   padding: 8px;

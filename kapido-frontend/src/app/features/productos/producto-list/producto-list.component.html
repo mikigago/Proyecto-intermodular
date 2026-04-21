@@ -11,7 +11,7 @@
     </div>
     <nav class="kap-nav">
       <a class="kap-nav-item" (click)="irADashboard()" style="cursor:pointer">
-        Dashboard
+        Panel de control
       </a>
       <a class="kap-nav-item active">
         Productos
@@ -82,8 +82,8 @@
                   <td class="fw-semibold">{{ p.nombre }}</td>
                   <td>{{ p.numeroLote }}</td>
                   <td>{{ p.codigoBarras || '—' }}</td>
-                  <td>{{ p.fechaLlegada }}</td>
-                  <td>{{ p.fechaCaducidad }}</td>
+                  <td>{{ p.fechaLlegada | date:'dd/MM/yyyy' }}</td>
+                  <td>{{ p.fechaCaducidad | date:'dd/MM/yyyy' }}</td>
                   <td>
                     <span *ngIf="p.cantidadActual != null; else sinStock" class="kap-stock-text"
                           [class.kap-stock-low]="p.cantidadActual! <= 5">
