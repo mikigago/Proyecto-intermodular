@@ -37,6 +37,7 @@ export class DashboardComponent implements OnInit {
 
   rol: string = '';
   email: string = '';
+  sidebarAbierta: boolean = false;
 
   constructor(
     private alertaService: AlertaService,
@@ -160,5 +161,13 @@ export class DashboardComponent implements OnInit {
   cerrarSesion(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleSidebar(): void {
+    this.sidebarAbierta = !this.sidebarAbierta;
+  }
+
+  closeSidebar(): void {
+    this.sidebarAbierta = false;
   }
 }

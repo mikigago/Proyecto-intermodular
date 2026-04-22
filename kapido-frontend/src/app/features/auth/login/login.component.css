@@ -4,10 +4,18 @@
   align-items: center;
   justify-content: center;
   background-color: #f8f9fa;
+  padding: 16px;
 }
 
 .login-card {
   width: 100%;
   max-width: 420px;
   border-radius: 12px;
+}
+
+@media (max-width: 480px) {
+  .login-wrapper {
+    align-items: flex-start;
+    padding-top: 40px;
+  }
 }

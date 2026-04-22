@@ -19,6 +19,7 @@ export class ProductoListComponent implements OnInit {
   error: string = '';
   rol: string = '';
   email: string = '';
+  sidebarAbierta: boolean = false;
 
   // Estado del panel inline de venta
   ventaProductoId: number | null = null;
@@ -163,5 +164,13 @@ export class ProductoListComponent implements OnInit {
   cerrarSesion(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleSidebar(): void {
+    this.sidebarAbierta = !this.sidebarAbierta;
+  }
+
+  closeSidebar(): void {
+    this.sidebarAbierta = false;
   }
 }

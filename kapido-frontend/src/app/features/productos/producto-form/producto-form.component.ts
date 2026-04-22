@@ -17,6 +17,7 @@ export class ProductoFormComponent implements OnInit {
   modoEdicion: boolean = false;
   productoId: number | null = null;
   cargando: boolean = false;
+  sidebarAbierta: boolean = false;
   guardando: boolean = false;
   error: string = '';
   categoria: string = '';
@@ -199,5 +200,13 @@ export class ProductoFormComponent implements OnInit {
       codigo = codigo + digitos[i];
     }
     this.producto.codigoBarras = codigo;
+  }
+
+  toggleSidebar(): void {
+    this.sidebarAbierta = !this.sidebarAbierta;
+  }
+
+  closeSidebar(): void {
+    this.sidebarAbierta = false;
   }
 }

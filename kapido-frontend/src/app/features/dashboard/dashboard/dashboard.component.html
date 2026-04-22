@@ -1,7 +1,16 @@
 <div class="kap-layout">
 
+  <!-- Barra superior móvil -->
+  <div class="kap-mobile-topbar">
+    <button class="kap-hamburger" (click)="toggleSidebar()">&#9776;</button>
+    <div class="kap-mobile-brand"><span class="kap-brand-k">K</span><span class="kap-brand-text">apido</span></div>
+  </div>
+
+  <!-- Overlay para cerrar sidebar en móvil -->
+  <div class="kap-overlay" [class.kap-overlay--visible]="sidebarAbierta" (click)="closeSidebar()"></div>
+
   <!-- Barra lateral -->
-  <aside class="kap-sidebar">
+  <aside class="kap-sidebar" [class.kap-sidebar--open]="sidebarAbierta">
     <div class="kap-brand">
       <div class="kap-brand-name">
         <span class="kap-brand-k">K</span>
@@ -10,10 +19,10 @@
       <div class="kap-brand-subtitle">Expiration Control</div>
     </div>
     <nav class="kap-nav">
-      <a class="kap-nav-item active">
+      <a class="kap-nav-item active" (click)="closeSidebar()">
         Panel de control
       </a>
-      <a class="kap-nav-item" (click)="irAProductos()" style="cursor:pointer">
+      <a class="kap-nav-item" (click)="irAProductos(); closeSidebar()" style="cursor:pointer">
         Productos
       </a>
     </nav>
