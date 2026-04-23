@@ -399,3 +399,18 @@ La primera fase oscurece el fondo con un overlay rgba(13,27,42, 0.88) acompañad
 
 La segunda fase traslada el modal del QR desde la esquina inferior izquierda (posición aproximada del thumbnail en el footer) hasta el centro exacto de la pantalla, escalándolo desde un 12% hasta su tamaño completo, mediante una transición de 0.55 segundos con curva cubic-bezier(0.22, 1, 0.36, 1). El modal muestra el QR grande (270px), un texto explicativo y un botón de cierre. Hacer clic en el overlay o en el botón "✕ Cerrar" invierte la animación y oculta el modal.
 
+Despliegue en GitHub Pages (23/04/2026)
+
+El frontend Angular se publicó de forma estática en GitHub Pages bajo la URL:
+
+https://mikigago.github.io/Proyecto-intermodular/
+
+Para ello se realizaron los siguientes pasos:
+
+- Se amplió el presupuesto de tamaño en angular.json (maximumWarning: 2MB, maximumError: 5MB para el bundle inicial; 20kB/50kB para estilos de componente) y se añadió qrcode a allowedCommonJsDependencies para suprimir el aviso de dependencia CommonJS.
+- Se generó el build de producción con base-href ajustado: ng build --base-href /Proyecto-intermodular/. Esto garantiza que todos los assets y rutas del router de Angular funcionen correctamente bajo la subruta del repositorio.
+- Se copió index.html como 404.html en el directorio de salida (dist/kapido-frontend/browser/) para que GitHub Pages sirva la SPA correctamente al acceder directamente a cualquier ruta del router sin que el servidor devuelva un 404 real.
+- Se inicializó un repositorio Git temporal en el directorio dist/kapido-frontend/browser/, se hizo commit de los 22 archivos estáticos generados y se subieron forzando la rama gh-pages del repositorio remoto.
+- En los ajustes del repositorio (Settings → Pages) se configuró la fuente como la rama gh-pages, raíz /.
+- La URL del QR en AppSelectorComponent se actualizó a la URL fija de producción (https://mikigago.github.io/Proyecto-intermodular/) en lugar de window.location.origin, para que el código QR generado apunte siempre a la dirección pública correcta.
+
