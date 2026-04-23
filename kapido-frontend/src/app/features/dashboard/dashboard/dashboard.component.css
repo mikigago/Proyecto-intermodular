@@ -265,7 +265,7 @@
   padding: 16px 24px;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #2d3748;
+  color: #000000;
   background: #f7fafc;
   border-bottom: 1px solid #e2e8f0;
 }
@@ -273,19 +273,19 @@
 .kap-panel-header-warning {
   background: #fffaf0;
   border-bottom-color: #f6e05e;
-  color: #744210;
+  color: #000000;
 }
 
 .kap-panel-header-danger {
   background: #fff5f5;
   border-bottom-color: #feb2b2;
-  color: #742a2a;
+  color: #000000;
 }
 
 .kap-panel-header-stock {
   background: #f0fdf9;
   border-bottom-color: #00c9a7;
-  color: #065f46;
+  color: #000000;
 }
 
 .kap-panel-icon {
@@ -450,25 +450,7 @@
 }
 
 /* ── Stock chips en tablas ── */
-.kap-stock-chip {
-  display: inline-block;
-  padding: 2px 10px;
-  background: #d1faf3;
-  color: #065f46;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 700;
-}
 
-.kap-stock-warn {
-  background: #fefcbf;
-  color: #744210;
-}
-
-.kap-stock-lost {
-  background: #fed7d7;
-  color: #822727;
-}
 
 .kap-stock-perdido-resumen {
   display: flex;
@@ -534,7 +516,7 @@
 .kap-panel-header-sold {
   background: #ebf8ff;
   border-bottom-color: #90cdf4;
-  color: #1a365d;
+  color: #000000;
 }
 
 .kap-badge-sold {

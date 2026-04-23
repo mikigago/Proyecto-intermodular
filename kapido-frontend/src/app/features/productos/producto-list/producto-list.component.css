@@ -1,3 +1,49 @@
+/* ── Buscador de productos ── */
+.kap-search-bar {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  padding: 18px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+}
+
+.kap-search-bar .kap-input {
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 0.95rem;
+  background: #f9fafb;
+  transition: border 0.15s;
+}
+.kap-search-bar .kap-input:focus {
+  border-color: #00c9a7;
+  outline: none;
+  background: #fff;
+}
+
+.kap-search-bar .kap-btn-secondary {
+  background: #f7fafc;
+  color: #2d3748;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  padding: 7px 18px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border 0.15s;
+}
+.kap-search-bar .kap-btn-secondary:hover {
+  background: #e2e8f0;
+  border-color: #00c9a7;
+}
+::ng-deep .badge-en-stock       { background:#d1faf3; color:#065f46; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; }
+::ng-deep .badge-proximo-caducar{ background:#fefcbf; color:#744210; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; }
+::ng-deep .badge-caducado       { background:#fed7d7; color:#742a2a; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; }
+::ng-deep .badge-retirado       { background:#e2e8f0; color:#4a5568; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; }
 /* ── Layout ── */
 .kap-layout {
   display: flex;
@@ -253,10 +299,7 @@
 .kap-btn-primary:hover { background: #00b397; }
 
 /* ── Estado badges (reutilizados del componente) ── */
-::ng-deep .badge-en-stock       { background:#d1faf3; color:#065f46; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; }
-::ng-deep .badge-proximo-caducar{ background:#fefcbf; color:#744210; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; }
-::ng-deep .badge-caducado       { background:#fed7d7; color:#742a2a; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; }
-::ng-deep .badge-retirado       { background:#e2e8f0; color:#4a5568; padding:3px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; }
+
 
 /* ── Stock ── */
 .kap-stock-text { font-weight: 600; color: #2d3748; font-size: 0.87rem; white-space: nowrap; }

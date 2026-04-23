@@ -12,14 +12,19 @@ import { Producto, EstadoProducto } from '../../../core/models/producto.model';
   templateUrl: './producto-list.component.html',
   styleUrls: ['./producto-list.component.css']
 })
-export class ProductoListComponent implements OnInit {
 
+export class ProductoListComponent implements OnInit {
   productos: Producto[] = [];
+  productosFiltrados: Producto[] = [];
   cargando: boolean = false;
   error: string = '';
   rol: string = '';
   email: string = '';
   sidebarAbierta: boolean = false;
+
+  // Filtros
+  filtroNombre: string = '';
+  filtroLote: string = '';
 
   // Estado del panel inline de venta
   ventaProductoId: number | null = null;
@@ -40,23 +45,37 @@ export class ProductoListComponent implements OnInit {
   }
 
   cargarProductos(): void {
-    console.log('[ProductoList] cargarProductos() llamado');
     this.cargando = true;
     this.error = '';
     this.productoService.getAll().subscribe({
       next: (data) => {
-        console.log('[ProductoList] Productos recibidos:', data);
         this.productos = data;
+        this.aplicarFiltro();
         this.cargando = false;
         this.cdr.detectChanges();
       },
       error: (err) => {
-        console.error('[ProductoList] Error:', err);
         this.error = `Error al cargar los productos (${err.status ?? 'sin respuesta'}). Inténtalo de nuevo.`;
         this.cargando = false;
         this.cdr.detectChanges();
       }
     });
+  }
+
+  aplicarFiltro(): void {
+    const nombre = this.filtroNombre.trim().toLowerCase();
+    const lote = this.filtroLote.trim().toLowerCase();
+    this.productosFiltrados = this.productos.filter(p => {
+      const coincideNombre = !nombre || (p.nombre && p.nombre.toLowerCase().includes(nombre));
+      const coincideLote = !lote || (p.numeroLote && p.numeroLote.toLowerCase().includes(lote));
+      return coincideNombre && coincideLote;
+    });
+  }
+
+  limpiarFiltro(): void {
+    this.filtroNombre = '';
+    this.filtroLote = '';
+    this.aplicarFiltro();
   }
 
   irADashboard(): void {

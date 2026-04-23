@@ -1,22 +1,4 @@
 /* Estilos globales de Kapido */
 
 /* Colores de estado de productos */
-.badge-en-stock {
-  background-color: #198754;
-  color: white;
-}
 
-.badge-proximo-caducar {
-  background-color: #fd7e14;
-  color: white;
-}
-
-.badge-caducado {
-  background-color: #dc3545;
-  color: white;
-}
-
-.badge-retirado {
-  background-color: #6c757d;
-  color: white;
-}

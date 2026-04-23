@@ -49,6 +49,40 @@
       <button class="kap-btn-primary" *ngIf="!esCajero() && !esInvitado()" (click)="irANuevo()">+ Nuevo Producto</button>
     </header>
 
+
+    <!-- Buscador de productos -->
+    <div class="kap-panel" style="width: 100%; max-width: 1160px; margin: 32px auto 32px auto;">
+      <div class="kap-panel-header" style="border-bottom: 1px solid #e2e8f0;">
+        <span>Buscar productos</span>
+      </div>
+      <div class="kap-panel-body p-3">
+        <form class="row g-2 align-items-center" autocomplete="off" (submit)="$event.preventDefault()">
+          <div class="col-md-5">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por nombre..."
+              [(ngModel)]="filtroNombre"
+              (ngModelChange)="aplicarFiltro()"
+              name="filtroNombre"
+            />
+          </div>
+          <div class="col-md-4">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Buscar por Nº lote..."
+              [(ngModel)]="filtroLote"
+              (ngModelChange)="aplicarFiltro()"
+              name="filtroLote"
+            />
+          </div>
+          <div class="col-md-3 d-flex align-items-center">
+            <button type="button" class="btn btn-outline-secondary me-2" (click)="limpiarFiltro()" *ngIf="filtroNombre || filtroLote">Limpiar</button>
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="kap-content">
 
       <div class="alert alert-danger" *ngIf="error">{{ error }}</div>
@@ -84,7 +118,7 @@
               <tr *ngIf="productos.length === 0">
                 <td colspan="9" class="kap-table-empty">No hay productos registrados.</td>
               </tr>
-              <ng-container *ngFor="let p of productos">
+              <ng-container *ngFor="let p of productosFiltrados">
                 <!-- Fila principal del producto -->
                 <tr [class.kap-row-selling]="ventaProductoId === p.id">
                   <td class="kap-id">{{ p.id }}</td>
