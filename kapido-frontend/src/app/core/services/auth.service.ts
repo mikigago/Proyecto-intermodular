@@ -10,8 +10,8 @@ import { LoginRequest, LoginResponse } from '../models/usuario.model';
   providedIn: 'root'
 })
 export class AuthService {
-
-  private apiUrl = 'http://localhost:8080/api/auth';
+private apiUrl = 'https://rohrvk-ip-188-85-9-182.tunnelmole.net/api/auth';
+  //private apiUrl = 'http://localhost:8080/api/auth';
 
   constructor(private http: HttpClient) {}
 
