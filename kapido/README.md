@@ -304,3 +304,64 @@ Mejora 8 — Tabla "Lotes agotados" en el dashboard
 
 Se añadió una nueva sección al final del dashboard: la tabla "Lotes agotados". En ella aparecen los productos cuyo estado es RETIRADO y cuya cantidadActual es 0, es decir, los lotes que se han vendido completamente. Esto los distingue visualmente de los productos caducados (que también tienen estado RETIRADO pero por fecha). La tabla muestra Nombre, Nº Lote, Código de Barras, Fecha de Caducidad y Stock vendido (0 / cantidadInicial unidad). El diseño usa un esquema de color azul (kap-stat-sold, kap-panel-header-sold, kap-badge-sold, kap-stock-sold) para diferenciarlo del resto de tablas.
 
+
+-- Sesión de diseño y experiencia de usuario (23/04/2026) --
+
+Cambio de paleta de color principal
+
+Se sustituyó el color primario teal #00c9a7 (y su variante hover #00b397) por el azul #00a7c9 en toda la aplicación frontend. El cambio afecta a botones primarios, nav activo del sidebar, avatar de usuario, spinner, badges de estado, bordes de inputs en foco, indicadores de venta inline y todos sus equivalentes rgba(). Los archivos modificados fueron:
+
+- producto-list.component.css
+- producto-form.component.css
+- dashboard.component.css
+- app.css
+
+El reemplazo se realizó de forma masiva mediante un script PowerShell que recorrió todos los archivos CSS del directorio src/, sustituyendo #00c9a7 → #00a7c9 y rgba(0,201,167,...) → rgba(0,167,201,...).
+
+Animación de entrada (Splash Screen)
+
+Se creó un módulo de animación de entrada a la aplicación previo al login. La funcionalidad se implementó en la carpeta features/animaciones/ (inicialmente llamada splash/, posteriormente renombrada) con los ficheros animaciones.component.ts, animaciones.component.html, animaciones.component.css y animaciones.module.ts.
+
+La pantalla de entrada muestra sobre un fondo #152d45: el logotipo "Kapido" con la K en #00a7c9, un subtítulo en mayúsculas, una mascota animada mediante ciclo de frames y tres puntos de carga animados. La mascota se implementó usando 9 fotogramas PNG (Frame 01–09) extraídos de la carpeta "Imagenes de TFG/Sprite de imagenes saludar/" y copiados a src/assets/sprites/. La animación cicla los frames a 130 ms por fotograma durante 4 loops completos (~4.7 segundos) antes de navegar a la siguiente pantalla.
+
+La lógica de ciclo de frames usa NgZone.runOutsideAngular() para evitar disparar la detección de cambios de Angular en cada tick del intervalo, y NgZone.run() + ChangeDetectorRef.detectChanges() para forzar la actualización del DOM únicamente al cambiar de frame, optimizando así el rendimiento.
+
+Eliminación del fondo blanco de los sprites
+
+Los fotogramas PNG originales tenían fondo blanco integrado (no eran transparentes). Se automatizó la eliminación del fondo con un script Node.js (remove-bg.mjs) que usó la librería jimp para recorrer pixel a pixel cada imagen y hacer transparentes todos los píxeles con R, G y B superiores a 225. El script procesó los 9 frames y los sobreescribió en su ubicación original dentro de assets/sprites/.
+
+Configuración de assets en angular.json
+
+La carpeta src/assets no estaba registrada en el array assets de angular.json, por lo que las imágenes no se servían al arrancar ng serve. Se añadió la entrada { "glob": "**/*", "input": "src/assets", "output": "assets" } junto a la entrada existente de public/.
+
+Selector de aplicación
+
+Se creó una pantalla intermedia entre la animación de entrada y el login, implementada en features/app-selector/ con los ficheros app-selector.component.ts, app-selector.component.html, app-selector.component.css y app-selector.module.ts.
+
+La pantalla muestra tres tarjetas de selección sobre el mismo fondo #152d45:
+- K-Expiration Control: tarjeta activa con borde #00a7c9, icono ⏱️ y descripción. Al hacer clic navega a /login.
+- K-Inventory: tarjeta deshabilitada con badge "Próximamente".
+- K-Analytics: tarjeta deshabilitada con badge "Próximamente".
+
+El flujo de navegación completo es: / → /animaciones → /selector → /login → /dashboard.
+
+Rediseño del Login
+
+El componente de login (login.component.html y login.component.css) fue rediseñado para cohesionarse visualmente con la animación de entrada y el selector de aplicación. Los cambios principales:
+
+- Fondo #152d45 con animación de fade-in al entrar.
+- Card centrada con fondo #1e3a52, border-radius 16px, sombra profunda y animación slide-up al aparecer.
+- Logotipo "Kapido" con la misma tipografía y colores que la pantalla de animación.
+- Inputs con fondo #152d45, borde sutil rgba blanco y foco en #00a7c9.
+- Botón "Entrar" en #00a7c9 con hover que lo oscurece ligeramente y efecto translateY(-1px).
+- Estado de carga representado con los mismos tres puntos animados (dotBounce) del splash en lugar de texto.
+- Mensaje de error con fondo rojo translúcido sobre el fondo oscuro, sin depender de Bootstrap.
+
+Renombrado de splash a animaciones
+
+La carpeta features/splash/ y todos sus archivos fueron renombrados a features/animaciones/ para reflejar mejor su propósito. Los cambios afectaron a: nombre de la carpeta y archivos, nombre de la clase (SplashComponent → AnimacionesComponent), nombre del módulo (SplashModule → AnimacionesModule), selector Angular (app-splash → app-animaciones), referencias en app-routing-module.ts (ruta /splash → /animaciones, import del módulo) y todos los nombres de clases CSS (prefijo .kap-splash* → .kap-anim*).
+
+Configuración del .gitignore raíz
+
+La librería jimp y sus dependencias se instalaron en el directorio raíz del repositorio (no dentro de kapido-frontend/), generando una carpeta node_modules con más de 2000 archivos que Git detectaba como pendientes de subir. Se creó el fichero .gitignore en la raíz del repositorio incluyendo node_modules/, package.json y package-lock.json para excluirlos del control de versiones.
+

@@ -3,8 +3,20 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
-  // Redirige la raíz al login
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // Pantalla de entrada animada
+  { path: '', redirectTo: 'animaciones', pathMatch: 'full' },
+
+  // Animación de entrada
+  {
+    path: 'animaciones',
+    loadChildren: () => import('./features/animaciones/animaciones.module').then(m => m.AnimacionesModule)
+  },
+
+  // Selector de aplicación
+  {
+    path: 'selector',
+    loadChildren: () => import('./features/app-selector/app-selector.module').then(m => m.AppSelectorModule)
+  },
 
   // Módulo de autenticación (públic, sin guard)
   {

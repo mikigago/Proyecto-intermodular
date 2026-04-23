@@ -21,7 +21,7 @@
   font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -1px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(148, 51, 51, 0.07);
 }
 
 .kap-brand-name {
@@ -32,7 +32,7 @@
 }
 
 .kap-brand-k {
-  color: #00c9a7;
+  color: #00a7c9;
 }
 
 .kap-brand-text {
@@ -219,7 +219,6 @@
 
 .kap-stat-warning { border-left-color: #f6ad55; }
 .kap-stat-danger  { border-left-color: #fc8181; }
-.kap-stat-info    { border-left-color: #63b3ed; }
 .kap-stat-stock   { border-left-color: #00c9a7; }
 .kap-stat-lost    { border-left-color: #b794f4; }
 
@@ -230,7 +229,6 @@
 
 .kap-stat-warning .kap-stat-icon { color: #ed8936; }
 .kap-stat-danger  .kap-stat-icon { color: #e53e3e; }
-.kap-stat-info    .kap-stat-icon { color: #3182ce; }
 
 .kap-stat-number {
   font-size: 2.2rem;
@@ -352,6 +350,7 @@
   padding: 12px 20px;
   border-bottom: 1px solid #f0f2f5;
   color: #2d3748;
+  white-space: nowrap;
 }
 
 .kap-table tbody tr:hover td {

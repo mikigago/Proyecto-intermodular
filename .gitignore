@@ -1,0 +1,7 @@
+# Dependencias instaladas en la raíz (jimp, etc.)
+node_modules/
+package.json
+package-lock.json
+
+# Script de utilidad (opcional, descomenta si no quieres subirlo)
+# remove-bg.mjs

@@ -1,58 +1,59 @@
-<div class="login-wrapper">
-  <div class="card login-card shadow">
+<div class="kap-login-bg">
 
-    <div class="card-body p-4">
+  <div class="kap-login-card">
 
-      <!-- Logo / Título -->
-      <div class="text-center mb-4">
-        <h2 class="fw-bold text-success">KAPIDO</h2>
-        <p class="text-muted">K-Expiration Control</p>
+    <!-- Brand -->
+    <div class="kap-login-brand">
+      <div class="kap-login-brand-name">
+        <span class="kap-k">K</span><span class="kap-text">apido</span>
       </div>
-
-      <!-- Formulario -->
-      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
-
-        <!-- Email -->
-        <div class="mb-3">
-          <label for="email" class="form-label">Correo electrónico</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            class="form-control"
-            [(ngModel)]="email"
-            placeholder="usuario@kapido.com"
-            required>
-        </div>
-
-        <!-- Contraseña -->
-        <div class="mb-3">
-          <label for="password" class="form-label">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            class="form-control"
-            [(ngModel)]="password"
-            placeholder="••••••••"
-            required>
-        </div>
-
-        <!-- Mensaje de error -->
-        <div *ngIf="errorMessage" class="alert alert-danger py-2">
-          {{ errorMessage }}
-        </div>
-
-        <!-- Botón -->
-        <div class="d-grid mt-3">
-          <button type="submit" class="btn btn-success" [disabled]="cargando">
-            <span *ngIf="cargando">Entrando...</span>
-            <span *ngIf="!cargando">Entrar</span>
-          </button>
-        </div>
-
-      </form>
+      <div class="kap-login-subtitle">Sistema de gestión de productos</div>
     </div>
 
+    <!-- Formulario -->
+    <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="kap-login-form">
+
+      <div class="kap-field">
+        <label for="email" class="kap-label">Correo electrónico</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="kap-input"
+          [(ngModel)]="email"
+          placeholder="usuario@kapido.com"
+          required
+          autocomplete="email">
+      </div>
+
+      <div class="kap-field">
+        <label for="password" class="kap-label">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="kap-input"
+          [(ngModel)]="password"
+          placeholder="••••••••"
+          required
+          autocomplete="current-password">
+      </div>
+
+      <div *ngIf="errorMessage" class="kap-error">
+        {{ errorMessage }}
+      </div>
+
+      <button type="submit" class="kap-btn-submit" [disabled]="cargando">
+        <span *ngIf="cargando" class="kap-btn-loading">
+          <span class="kap-dot"></span>
+          <span class="kap-dot"></span>
+          <span class="kap-dot"></span>
+        </span>
+        <span *ngIf="!cargando">Entrar</span>
+      </button>
+
+    </form>
+
   </div>
+
 </div>

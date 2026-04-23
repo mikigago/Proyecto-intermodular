@@ -24,7 +24,7 @@
 }
 
 .kap-brand-name { font-size: 1.6rem; font-weight: 800; letter-spacing: -1px; line-height: 1; }
-.kap-brand-k   { color: #00c9a7; }
+.kap-brand-k   { color: #00a7c9; }
 .kap-brand-text { color: #ffffff; }
 .kap-brand-subtitle { font-size: 0.7rem; font-weight: 500; color: #a0aec0; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 4px; }
 
@@ -207,6 +207,7 @@
   border-bottom: 1px solid #f0f2f5;
   color: #2d3748;
   vertical-align: middle;
+  white-space: nowrap;
 }
 .kap-table tbody tr:hover td { background: #f7fafc; }
 .kap-table tbody tr:last-child td { border-bottom: none; }
@@ -337,7 +338,7 @@
     font-weight: 800;
   }
 
-  .kap-mobile-brand .kap-brand-k  { color: #00c9a7; }
+  .kap-mobile-brand .kap-brand-k  { color: #00a7c9; }
   .kap-mobile-brand .kap-brand-text { color: #ffffff; }
 
   .kap-layout {
