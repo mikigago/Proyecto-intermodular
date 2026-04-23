@@ -17,7 +17,7 @@ export class AppSelectorComponent implements OnInit {
   constructor(private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    const appUrl = window.location.origin;
+    const appUrl = 'https://mikigago.github.io/Proyecto-intermodular/';
     QRCode.toDataURL(appUrl, {
       width: 300,
       margin: 2,
