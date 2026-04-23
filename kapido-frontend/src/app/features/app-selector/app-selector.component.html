@@ -41,4 +41,37 @@
 
   </div>
 
+  <!-- ── Footer ── -->
+  <footer class="kap-footer">
+
+    <!-- QR (izquierda) -->
+    <div class="kap-footer-qr-wrap" (click)="abrirQr()" *ngIf="qrDataUrl" title="Abrir en móvil">
+      <img class="kap-footer-qr" [src]="qrDataUrl" alt="QR acceso móvil" />
+      <span class="kap-footer-qr-label">Móvil</span>
+    </div>
+
+    <!-- Info central -->
+    <div class="kap-footer-info">
+      <span class="kap-footer-product"><span class="kap-footer-k">K</span>apido Suite</span>
+      <span class="kap-footer-meta">K-Expiration Control &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; {{ year }}</span>
+      <span class="kap-footer-contact">contacto&#64;kapido.com</span>
+    </div>
+
+    <!-- Copy (derecha) -->
+    <div class="kap-footer-right">
+      <span class="kap-footer-copy">© {{ year }} Kapido</span>
+      <span class="kap-footer-legal">Proyecto TFG · Uso interno</span>
+    </div>
+
+  </footer>
+
+  <!-- ── QR Modal ── -->
+  <div class="kap-qr-overlay" [class.kap-qr-overlay--visible]="qrVisible" (click)="cerrarQr()">
+    <div class="kap-qr-modal" (click)="$event.stopPropagation()">
+      <img [src]="qrDataUrl" class="kap-qr-big" alt="QR de acceso móvil" />
+      <p class="kap-qr-hint">Escanea con tu móvil para acceder a la aplicación</p>
+      <button class="kap-qr-close-btn" (click)="cerrarQr()">✕ Cerrar</button>
+    </div>
+  </div>
+
 </div>

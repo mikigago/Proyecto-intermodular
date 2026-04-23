@@ -47,6 +47,14 @@ public class DataInitializer implements CommandLineRunner {
 
             System.out.println(">>> Usuarios de prueba creados: cajero / gestor / jefe");
         }
+        // Crear el usuario invitado si no existe
+        if (!usuarioRepository.findByEmail("invitado@kapido.com").isPresent()) {
+            usuarioRepository.save(new Usuario(null, "Invitado",
+                    "invitado@kapido.com",
+                    passwordEncoder.encode("invitado"),
+                    RolUsuario.INVITADO, true));
+            System.out.println(">>> Usuario invitado creado: invitado@kapido.com / invitado");
+        }
         // Si no hay configuración de alerta, se crea una por defecto con 7 días de aviso previo
         if (configAlertaRepository.count() == 0) {
             configAlertaRepository.save(new ConfigAlerta(1L, 7));

@@ -28,7 +28,7 @@ const routes: Routes = [
   {
     path: 'productos',
     canActivate: [AuthGuard],
-    data: { roles: ['CAJERO_REPONEDOR', 'GESTOR', 'JEFE_TIENDA'] },
+    data: { roles: ['CAJERO_REPONEDOR', 'GESTOR', 'JEFE_TIENDA', 'INVITADO'] },
     loadChildren: () => import('./features/productos/productos.module').then(m => m.ProductosModule)
   },
 
@@ -36,7 +36,7 @@ const routes: Routes = [
   {
     path: 'dashboard',
     canActivate: [AuthGuard],
-    data: { roles: ['CAJERO_REPONEDOR', 'GESTOR', 'JEFE_TIENDA'] },
+    data: { roles: ['CAJERO_REPONEDOR', 'GESTOR', 'JEFE_TIENDA', 'INVITADO'] },
     loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
 

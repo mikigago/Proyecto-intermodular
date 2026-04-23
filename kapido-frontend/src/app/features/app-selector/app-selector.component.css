@@ -4,12 +4,362 @@
 .kap-selector-bg {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   background: #152d45;
   font-family: 'Montserrat', sans-serif;
-  padding: 32px 16px;
+  padding: 32px 16px 0;
   animation: bgFadeIn 0.45s ease-out;
+}
+
+@keyframes bgFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Inner ── */
+.kap-selector-inner {
+  width: 100%;
+  max-width: 900px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Brand ── */
+.kap-selector-brand {
+  text-align: center;
+}
+
+.kap-brand-name {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+
+.kap-k    { color: #00a7c9; }
+.kap-text { color: #ffffff; }
+
+.kap-brand-subtitle {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #a0aec0;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+/* ── Cards grid ── */
+.kap-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+/* ── Card base ── */
+.kap-card {
+  background: #1e3a52;
+  border-radius: 16px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  text-align: left;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+}
+
+/* ── Card activa (clickable) ── */
+.kap-card--active {
+  cursor: pointer;
+  border-color: #00a7c9;
+  box-shadow: 0 0 0 1px #00a7c9, 0 8px 32px rgba(0, 167, 201, 0.18);
+  background: none;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.kap-card--active:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 0 1px #00a7c9, 0 16px 48px rgba(0, 167, 201, 0.28);
+}
+
+/* ── Card deshabilitada ── */
+.kap-card--soon {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Card icon ── */
+.kap-card-icon {
+  font-size: 2rem;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+/* ── Card title ── */
+.kap-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+/* ── Card desc ── */
+.kap-card-desc {
+  font-size: 0.82rem;
+  color: #a0aec0;
+  font-weight: 400;
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* ── Arrow en card activa ── */
+.kap-card-arrow {
+  margin-top: 12px;
+  font-size: 1.2rem;
+  color: #00a7c9;
+  font-weight: 700;
+  transition: transform 0.2s;
+}
+
+.kap-card--active:hover .kap-card-arrow {
+  transform: translateX(5px);
+}
+
+/* ── Badge "Próximamente" ── */
+.kap-card-badge {
+  margin-top: 12px;
+  padding: 3px 12px;
+  background: rgba(160, 174, 192, 0.15);
+  color: #a0aec0;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════ */
+.kap-footer {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 40px;
+  padding: 18px 0 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* ── QR thumbnail ── */
+.kap-footer-qr-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.kap-footer-qr {
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  border: 2px solid rgba(0, 167, 201, 0.35);
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.kap-footer-qr-wrap:hover .kap-footer-qr {
+  transform: scale(1.1);
+  border-color: #00a7c9;
+  box-shadow: 0 0 12px rgba(0, 167, 201, 0.35);
+}
+
+.kap-footer-qr-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #4a6580;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Info central ── */
+.kap-footer-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.kap-footer-product {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #a0aec0;
+}
+
+.kap-footer-k {
+  color: #00a7c9;
+}
+
+.kap-footer-meta {
+  font-size: 0.72rem;
+  color: #4a6580;
+  font-weight: 500;
+}
+
+.kap-footer-contact {
+  font-size: 0.72rem;
+  color: #4a6580;
+}
+
+/* ── Right ── */
+.kap-footer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.kap-footer-copy {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  font-weight: 600;
+}
+
+.kap-footer-legal {
+  font-size: 0.65rem;
+  color: #4a6580;
+}
+
+/* ════════════════════════════════════════
+   QR MODAL OVERLAY
+   ════════════════════════════════════════ */
+.kap-qr-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 27, 42, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  pointer-events: none;
+  transition: background 0.4s, backdrop-filter 0.4s;
+  backdrop-filter: blur(0px);
+}
+
+.kap-qr-overlay--visible {
+  background: rgba(13, 27, 42, 0.88);
+  pointer-events: all;
+  backdrop-filter: blur(6px);
+}
+
+/* ── Modal card ── */
+.kap-qr-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  /* Empieza en la esquina inferior-izquierda donde está el QR del footer */
+  transform: translate(-480px, 360px) scale(0.12);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease-out;
+}
+
+.kap-qr-overlay--visible .kap-qr-modal {
+  transform: translate(0, 0) scale(1);
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── QR image grande ── */
+.kap-qr-big {
+  width: 270px;
+  height: 270px;
+  border-radius: 18px;
+  border: 3px solid #00a7c9;
+  box-shadow: 0 0 70px rgba(0, 167, 201, 0.28), 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.kap-qr-hint {
+  color: #a0aec0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+  max-width: 280px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.kap-qr-close-btn {
+  padding: 9px 28px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #a0aec0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  letter-spacing: 0.03em;
+}
+
+.kap-qr-close-btn:hover {
+  color: #00a7c9;
+  border-color: #00a7c9;
+  background: rgba(0, 167, 201, 0.07);
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .kap-cards {
+    grid-template-columns: 1fr;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  .kap-brand-name {
+    font-size: 2.2rem;
+  }
+
+  .kap-footer {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .kap-footer-right {
+    display: none;
+  }
+
+  .kap-qr-big {
+    width: 220px;
+    height: 220px;
+  }
+
+  .kap-qr-modal {
+    transform: translate(-200px, 320px) scale(0.12);
+  }
 }
 
 @keyframes bgFadeIn {

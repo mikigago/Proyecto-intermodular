@@ -20,21 +20,21 @@ public class AlertaController {
     }
 
     // GET /api/alertas → productos próximos a caducar
-    @PreAuthorize("hasAnyAuthority('CAJERO_REPONEDOR','GESTOR','JEFE_TIENDA')")
+    @PreAuthorize("hasAnyAuthority('CAJERO_REPONEDOR','GESTOR','JEFE_TIENDA','INVITADO')")
     @GetMapping
     public ResponseEntity<List<ProductoDTO>> getProximosACaducar() {
         return ResponseEntity.ok(alertaService.findProductosProximosACaducar());
     }
 
     // GET /api/alertas/caducados → productos ya caducados
-    @PreAuthorize("hasAnyAuthority('CAJERO_REPONEDOR','GESTOR','JEFE_TIENDA')")
+    @PreAuthorize("hasAnyAuthority('CAJERO_REPONEDOR','GESTOR','JEFE_TIENDA','INVITADO')")
     @GetMapping("/caducados")
     public ResponseEntity<List<ProductoDTO>> getCaducados() {
         return ResponseEntity.ok(alertaService.findProductosCaducados());
     }
 
     // GET /api/alertas/config → días de aviso configurados
-    @PreAuthorize("hasAnyAuthority('CAJERO_REPONEDOR','GESTOR','JEFE_TIENDA')")
+    @PreAuthorize("hasAnyAuthority('CAJERO_REPONEDOR','GESTOR','JEFE_TIENDA','INVITADO')")
     @GetMapping("/config")
     public ResponseEntity<Map<String, Integer>> getConfig() {
         return ResponseEntity.ok(Map.of("diasPrevioAviso", alertaService.getDiasPrevioAviso()));

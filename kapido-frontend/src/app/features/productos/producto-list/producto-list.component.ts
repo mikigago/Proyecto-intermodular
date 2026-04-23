@@ -93,6 +93,10 @@ export class ProductoListComponent implements OnInit {
     return this.rol === 'CAJERO_REPONEDOR';
   }
 
+  esInvitado(): boolean {
+    return this.rol === 'INVITADO';
+  }
+
   // ── Venta inline ──────────────────────────────
   abrirVenta(id: number): void {
     this.ventaProductoId = id;

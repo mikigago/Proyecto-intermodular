@@ -46,7 +46,7 @@
         <h1 class="kap-page-title">Gestión de Productos</h1>
         <p class="kap-page-subtitle">Listado completo de productos registrados</p>
       </div>
-      <button class="kap-btn-primary" *ngIf="!esCajero()" (click)="irANuevo()">+ Nuevo Producto</button>
+      <button class="kap-btn-primary" *ngIf="!esCajero() && !esInvitado()" (click)="irANuevo()">+ Nuevo Producto</button>
     </header>
 
     <div class="kap-content">
@@ -105,7 +105,7 @@
                     <button class="kap-btn-action kap-btn-sell"
                             *ngIf="esCajero() && p.cantidadActual != null && p.estado !== 'RETIRADO' && p.estado !== 'CADUCADO'"
                             (click)="abrirVenta(p.id!)">Vender</button>
-                    <button class="kap-btn-action kap-btn-edit" *ngIf="!esCajero()" (click)="irAEditar(p.id!)">Editar</button>
+                    <button class="kap-btn-action kap-btn-edit" *ngIf="!esCajero() && !esInvitado()" (click)="irAEditar(p.id!)">Editar</button>
                     <button class="kap-btn-action kap-btn-delete" *ngIf="esTienda()" (click)="eliminar(p.id!)">Eliminar</button>
                   </td>
                 </tr>

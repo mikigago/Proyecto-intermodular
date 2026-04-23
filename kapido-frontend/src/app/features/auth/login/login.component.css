@@ -157,6 +157,30 @@
   40%           { transform: scale(1);   opacity: 1; }
 }
 
+/* ── Back button ── */
+.kap-btn-back {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  background: transparent;
+  color: #a0aec0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.kap-btn-back:hover {
+  color: #00a7c9;
+  border-color: #00a7c9;
+  background: rgba(0, 167, 201, 0.06);
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .kap-login-card {

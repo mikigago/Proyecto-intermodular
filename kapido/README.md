@@ -365,3 +365,37 @@ Configuración del .gitignore raíz
 
 La librería jimp y sus dependencias se instalaron en el directorio raíz del repositorio (no dentro de kapido-frontend/), generando una carpeta node_modules con más de 2000 archivos que Git detectaba como pendientes de subir. Se creó el fichero .gitignore en la raíz del repositorio incluyendo node_modules/, package.json y package-lock.json para excluirlos del control de versiones.
 
+Botón de retroceso en el Login
+
+Se añadió un botón "← Volver a la selección" debajo del formulario de login. Al pulsarlo, el componente LoginComponent llama a volverAlSelector() que navega programáticamente a /selector. El botón tiene fondo transparente con borde sutil y, al hacer hover, adquiere el color de acento #00a7c9, manteniendo coherencia con el resto del diseño.
+
+Usuario Invitado (rol de solo lectura)
+
+Se añadió un nuevo rol INVITADO al enum RolUsuario del backend. Este rol permite acceder a la aplicación para consultar datos sin poder crear, editar ni eliminar ningún registro.
+
+En el backend:
+
+- RolUsuario.java: nuevo valor INVITADO en el enum.
+- DataInitializer.java: al arrancar la aplicación, se comprueba si ya existe el usuario invitado@kapido.com y, si no, se crea con contraseña "invitado" cifrada en BCrypt y rol INVITADO. La comprobación se hace por email (findByEmail) en lugar de por count, para que funcione aunque ya existan otros usuarios en la base de datos.
+- AlertaController.java: los tres endpoints GET (/api/alertas, /api/alertas/caducados, /api/alertas/config) añaden INVITADO a su lista de @PreAuthorize, permitiéndole consultar alertas y configuración.
+
+En el frontend:
+
+- app-routing-module.ts: INVITADO añadido a data.roles de las rutas /dashboard y /productos, para que el AuthGuard le permita el acceso.
+- producto-list.component.ts: nuevo método esInvitado() que devuelve true cuando el rol almacenado en localStorage es INVITADO.
+- producto-list.component.html: los botones "Nuevo Producto" y "Editar" añaden la condición && !esInvitado() para ocultarse cuando el usuario es invitado. El botón "Eliminar" ya estaba restringido a JEFE_TIENDA, por lo que no requirió cambios.
+
+QR de acceso móvil en el Selector de aplicación
+
+Se añadió un footer al componente AppSelectorComponent con tres zonas: izquierda (QR), centro (información de la aplicación) y derecha (copyright).
+
+El QR se genera dinámicamente en ngOnInit() usando la librería qrcode (instalada como dependencia npm junto con su paquete de tipos @types/qrcode). El código QR apunta a window.location.origin, por lo que funciona tanto en localhost durante el desarrollo como en cualquier URL de producción. Los colores del QR son texto blanco (#ffffff) sobre fondo oscuro (#1e3a52), coherentes con la paleta de la aplicación.
+
+Al generarse la URL del QR dentro de una Promise, la resolución ocurre fuera de la zona de Angular (NgZone), por lo que el *ngIf que controla su visibilidad no se actualizaba. Se inyectó ChangeDetectorRef y se llamó a this.cdr.detectChanges() tras asignar el data URL, siguiendo el mismo patrón ya aplicado en ProductoListComponent y DashboardComponent.
+
+Al hacer clic en el thumbnail del QR se dispara una animación en dos fases:
+
+La primera fase oscurece el fondo con un overlay rgba(13,27,42, 0.88) acompañado de un backdrop-filter: blur(6px) sobre el contenido.
+
+La segunda fase traslada el modal del QR desde la esquina inferior izquierda (posición aproximada del thumbnail en el footer) hasta el centro exacto de la pantalla, escalándolo desde un 12% hasta su tamaño completo, mediante una transición de 0.55 segundos con curva cubic-bezier(0.22, 1, 0.36, 1). El modal muestra el QR grande (270px), un texto explicativo y un botón de cierre. Hacer clic en el overlay o en el botón "✕ Cerrar" invierte la animación y oculta el modal.
+

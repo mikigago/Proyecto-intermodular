@@ -18,6 +18,10 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  volverAlSelector(): void {
+    this.router.navigate(['/selector']);
+  }
+
   onSubmit(): void {
     this.cargando = true;
     this.errorMessage = '';
