@@ -53,7 +53,7 @@ public class DataInitializer implements CommandLineRunner {
                     "invitado@kapido.com",
                     passwordEncoder.encode("invitado"),
                     RolUsuario.INVITADO, true));
-            System.out.println(">>> Usuario invitado creado: invitado@kapido.com / invitado");
+            System.out.println(">>> Usuario invitado creado: invitado / invitado");
         }
         // Si no hay configuración de alerta, se crea una por defecto con 7 días de aviso previo
         if (configAlertaRepository.count() == 0) {

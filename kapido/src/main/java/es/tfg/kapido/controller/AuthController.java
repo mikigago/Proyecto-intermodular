@@ -32,12 +32,16 @@ public class AuthController {
     // Respuesta: { "token": "eyJ...", "email": "...", "rol": "GESTOR" }
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
-        // Spring Security valida email + password contra la BD
+        // Si no contiene '@', se asume que es un alias y se añade el dominio por defecto
+        String email = request.getEmail().contains("@")
+                ? request.getEmail()
+                : request.getEmail() + "@kapido.com";
+
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            new UsernamePasswordAuthenticationToken(email, request.getPassword())
         );
 
-        Usuario usuario = usuarioRepository.findByEmail(request.getEmail()).orElseThrow();
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
         String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getRol().name());
 
         return ResponseEntity.ok(new LoginResponse(token, usuario.getEmail(), usuario.getRol().name()));
