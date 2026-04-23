@@ -157,6 +157,8 @@ El proyecto se generó con Angular CLI y sigue una arquitectura modular feature-
 - features/ — módulos de funcionalidad: auth (login), dashboard y productos. Cada uno tiene su propio NgModule con lazy loading.
 - shared/ — componentes reutilizables.
 
+https://emojigraph.org/es/search/?q=caja&searchLang=es
+
 4.2 Modelos de datos
 
 Se definieron dos ficheros de modelos TypeScript que mapean exactamente las respuestas del backend:
