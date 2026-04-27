@@ -25,7 +25,7 @@
   border-radius: 16px;
   padding: 40px 36px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  animation: cardSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: cardSlideUp 0.60s cubic-bezier(0.25, 1, 0.40, 1);
 }
 
 @keyframes cardSlideUp {
@@ -46,8 +46,23 @@
   line-height: 1;
 }
 
-.kap-k    { color: #00a7c9; }
-.kap-text { color: #ffffff; }
+.kap-k {
+  color: #00a7c9;
+  display: inline-block;
+  animation: kapSoftGlow 5s ease-in-out infinite;
+}
+
+@keyframes kapSoftGlow {
+  0%, 90%, 100% {
+    text-shadow: 0 0 0px rgba(0, 167, 201, 0);
+  }
+  70% {
+    text-shadow: 0 0 6px rgba(0, 213, 255, 0.529);
+  }
+}
+
+.kap-text { color: #ffffff; 
+}
 
 .kap-login-subtitle {
   font-size: 0.7rem;
@@ -180,6 +195,8 @@
   border-color: #00a7c9;
   background: rgba(0, 167, 201, 0.06);
 }
+
+
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
