@@ -416,3 +416,5 @@ Para ello se realizaron los siguientes pasos:
 - En los ajustes del repositorio (Settings → Pages) se configuró la fuente como la rama gh-pages, raíz /.
 - La URL del QR en AppSelectorComponent se actualizó a la URL fija de producción (https://mikigago.github.io/Proyecto-intermodular/) en lugar de window.location.origin, para que el código QR generado apunte siempre a la dirección pública correcta.
 
+-Banner de cookies: Se ha añadido un banner informativo de cookies en el frontend Angular (kapido-frontend) que aparece en la parte inferior de la pantalla. El usuario puede aceptarlo y su decisión se guarda en localStorage para no volver a mostrarlo. El banner se implementa en el componente `app-selector` con HTML, CSS y lógica en TypeScript.
+
