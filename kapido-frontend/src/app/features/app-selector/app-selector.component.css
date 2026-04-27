@@ -1,3 +1,35 @@
+/* Banner de cookies */
+.cookie-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #1e3a52;
+  color: #ffffff;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  box-shadow: 0 -5px 15px #0005;
+}
+.cookie-banner a {
+  color: #00a7c9;
+  text-decoration: underline;
+}
+.cookie-banner button {
+  margin-left: 18px;
+  background: #00a7c9;
+  color: #1e3a52;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 22px;
+  font-weight: 700;
+  transition: background 0.2s;
+}
+.cookie-banner button:hover {
+  background: #0093b3;
+}
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
 
 /* ── Background ── */

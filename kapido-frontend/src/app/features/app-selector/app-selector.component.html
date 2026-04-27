@@ -17,7 +17,7 @@
       <button class="kap-card kap-card--active" (click)="goToKExpiration()">
         <div class="kap-card-title">K-Expiration Control</div>
         <div class="kap-card-desc">Gestión de caducidades, stock y productos del establecimiento.</div>
-        <div class="kap-card-arrow">→</div>
+        <div class="kap-card-arrow">Acceder →</div>
       </button>
 
       <!-- Card 2: Próximamente -->
@@ -49,8 +49,10 @@
 
     <!-- Info central -->
     <div class="kap-footer-info">
-      <span class="kap-footer-product"><span class="kap-footer-k">K</span>apido Suite</span>
+      <span class="kap-footer-product"><span class="kap-footer-k">K</span>apido app</span>
       <span class="kap-footer-meta">K-Expiration Control &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; 2026</span>
+      <span class="kap-footer-meta">K-Inventory &nbsp;·&nbsp; coming soon</span>
+      <span class="kap-footer-meta">K-Analytics &nbsp;·&nbsp; coming soon</span>
       <span class="kap-footer-contact">contacto&#64;kapido.com</span>
     </div>
 
@@ -71,4 +73,11 @@
     </div>
   </div>
 
+  <!-- Banner de cookies -->
+  <div class="cookie-banner" *ngIf="!cookiesAccepted">
+    <span>
+      Utilizamos cookies para mejorar tu experiencia. (Puedes aceptar, no registra nada) <a href="http://localhost:4200/animaciones">política de cookies</a>.
+    </span>
+    <button (click)="aceptarCookies()">Aceptar</button>
+  </div>
 </div>
