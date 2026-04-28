@@ -280,8 +280,39 @@
 }
 .kap-btn-action:hover { opacity: 0.8; }
 
-.kap-btn-edit   { background: #ebf8ff; color: #2b6cb0; }
-.kap-btn-delete { background: #fff5f5; color: #c53030; }
+
+.kap-btn-icon {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  margin-right: 4px;
+  border-radius: 50%;
+  transition: background 0.5s, transform 0.5s;
+
+}
+.kap-btn-icon:active {
+  transform: scale(1);
+}
+.kap-btn-icon:hover {
+  transform: scale(1.2) rotate(-10deg);
+}
+.kap-btn-edit:hover {
+  background: #d8f6fb;
+}
+.kap-btn-delete:hover {
+  background: #facaca; /*jeje*/
+}
+.kap-btn-icon i.bi {
+  font-size: 1rem;
+  line-height: 1;
+  transition: color 0.5s;
+}
+.kap-btn-edit i.bi {
+  color: #2b6cb0;
+}
+.kap-btn-delete i.bi {
+  color: #c53030;
+}
 
 /* ── Primary button ── */
 .kap-btn-primary {

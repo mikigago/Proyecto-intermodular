@@ -139,8 +139,12 @@
                     <button class="kap-btn-action kap-btn-sell"
                             *ngIf="esCajero() && p.cantidadActual != null && p.estado !== 'RETIRADO' && p.estado !== 'CADUCADO'"
                             (click)="abrirVenta(p.id!)">Vender</button>
-                    <button class="kap-btn-action kap-btn-edit" *ngIf="!esCajero() && !esInvitado()" (click)="irAEditar(p.id!)">Editar</button>
-                    <button class="kap-btn-action kap-btn-delete" *ngIf="esTienda()" (click)="eliminar(p.id!)">Eliminar</button>
+                    <button class="kap-btn-icon kap-btn-edit" *ngIf="!esCajero() && !esInvitado()" (click)="irAEditar(p.id!)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="kap-btn-icon kap-btn-delete" *ngIf="esTienda()" (click)="eliminar(p.id!)">
+                      <i class="bi bi-trash3"></i>
+                    </button>
                   </td>
                 </tr>
                 <!-- Fila inline de venta (visible solo cuando este producto está seleccionado) -->
