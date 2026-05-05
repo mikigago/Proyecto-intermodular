@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
 /* Banner de cookies */
 .cookie-banner {
   position: fixed;
@@ -30,7 +32,6 @@
 .cookie-banner button:hover {
   background: #0093b3;
 }
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
 
 /* ── Background ── */
 .kap-selector-bg {
