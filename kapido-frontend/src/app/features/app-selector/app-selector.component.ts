@@ -19,7 +19,7 @@ export class AppSelectorComponent implements OnInit {
 
   ngOnInit(): void {
     // QR
-    const appUrl = 'https://mikigago.github.io/Proyecto-intermodular/';
+    const appUrl = 'https://kapido-frontend-production.up.railway.app';
     QRCode.toDataURL(appUrl, {
       width: 300,
       margin: 2,
