@@ -2,6 +2,7 @@ package es.tfg.kapido.config;
 
 import es.tfg.kapido.security.JwtAuthenticationFilter;
 import es.tfg.kapido.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,9 @@ import java.util.List;
 @EnableWebSecurity
 @org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 public class SecurityConfig {
+
+    @Value("${cors.origin:http://localhost:4200}")
+    private String corsOrigin;
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UsuarioService usuarioService;
@@ -51,11 +55,11 @@ public class SecurityConfig {
         return provider;
     }
 
-    // Permite peticiones desde Angular (puerto 4200) durante el desarrollo
+    // Permite peticiones desde el origen configurado (dev: localhost:4200, prod: Railway URL)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
+        config.setAllowedOrigins(List.of(corsOrigin));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

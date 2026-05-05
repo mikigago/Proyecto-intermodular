@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Producto } from '../models/producto.model';
+import { environment } from '../../../../environments/environment';
 
 // Servicio que gestiona las llamadas al endpoint /api/alertas del backend.
 // Permite consultar productos próximos a caducar, ya caducados y la configuración de días de aviso.
@@ -10,7 +11,7 @@ import { Producto } from '../models/producto.model';
 })
 export class AlertaService {
 
-  private apiUrl = 'http://localhost:8080/api/alertas';
+  private apiUrl = environment.apiUrl + '/api/alertas';
 
   constructor(private http: HttpClient) {}
 

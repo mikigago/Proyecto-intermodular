@@ -29,7 +29,7 @@ export class AppSelectorComponent implements OnInit {
       this.cdr.detectChanges();
     });
     // Cookies
-    this.cookiesAccepted = localStorage.getItem('cookiesAccepted') === 'true';
+   // this.cookiesAccepted = localStorage.getItem('cookiesAccepted') === 'true';
   }
 
   aceptarCookies(): void {
