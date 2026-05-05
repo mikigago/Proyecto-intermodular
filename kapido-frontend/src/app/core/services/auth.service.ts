@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LoginRequest, LoginResponse } from '../models/usuario.model';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 // Servicio singleton encargado de toda la lógica de autenticación.
 // Gestiona el login contra el backend, el guardado del token en localStorage

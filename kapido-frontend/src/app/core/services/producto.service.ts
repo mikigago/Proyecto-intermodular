@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Producto } from '../models/producto.model';
-import { environment } from '../../../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 // Servicio que gestiona todas las llamadas HTTP al endpoint /api/productos del backend.
 // El JwtInterceptor añade automáticamente el token en cada petición.
