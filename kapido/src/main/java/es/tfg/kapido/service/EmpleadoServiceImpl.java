@@ -3,7 +3,6 @@ package es.tfg.kapido.service;
 import es.tfg.kapido.exception.EmpleadoNotFoundException;
 import es.tfg.kapido.model.Empleado;
 import es.tfg.kapido.repository.EmpleadoRepository;
-import es.tfg.kapido.service.EmpleadoService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

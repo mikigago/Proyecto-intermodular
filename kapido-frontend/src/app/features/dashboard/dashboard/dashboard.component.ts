@@ -22,7 +22,6 @@ export class DashboardComponent implements OnInit {
   caducados: Producto[] = [];
   enStock: Producto[] = [];
   vendidos: Producto[] = [];
-  stockPerdido: number = 0;
   stockPerdidoUnidades: number = 0;
   stockPerdidoPacks: number = 0;
   stockPerdidoKg: number = 0;
@@ -94,13 +93,11 @@ export class DashboardComponent implements OnInit {
         );
 
         const perdidos = todos.filter(p => p.estado === 'CADUCADO' || p.estado === 'RETIRADO');
-        this.stockPerdido = 0;
         this.stockPerdidoUnidades = 0;
         this.stockPerdidoPacks = 0;
         this.stockPerdidoKg = 0;
         for (let i = 0; i < perdidos.length; i++) {
           const cantidad = perdidos[i].cantidadActual ?? 0;
-          this.stockPerdido = this.stockPerdido + cantidad;
           if (perdidos[i].tipoUnidad === 'packs') {
             this.stockPerdidoPacks = this.stockPerdidoPacks + cantidad;
           } else if (perdidos[i].tipoUnidad === 'kilogramos') {

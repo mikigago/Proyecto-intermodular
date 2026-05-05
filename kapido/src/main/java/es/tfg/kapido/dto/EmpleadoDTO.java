@@ -11,9 +11,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-//prueba de comentario
-
 public class EmpleadoDTO {
     
     private Long id;
