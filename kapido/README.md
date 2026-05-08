@@ -418,3 +418,59 @@ Para ello se realizaron los siguientes pasos:
 
 -Banner de cookies: Se ha añadido un banner informativo de cookies en el frontend Angular (kapido-frontend) que aparece en la parte inferior de la pantalla. El usuario puede aceptarlo y su decisión se guarda en localStorage para no volver a mostrarlo. El banner se implementa en el componente `app-selector` con HTML, CSS y lógica en TypeScript.
 
+
+-- Funcionalidad de venta para el cajero --
+
+Mejora 9 — Endpoint de venta en el backend
+
+Quería que el cajero pudiera registrar las ventas directamente desde la aplicación, así que añadí un nuevo endpoint: PATCH /api/productos/{id}/venta. Solo pueden usarlo los usuarios con rol CAJERO_REPONEDOR, lo controlo con @PreAuthorize. Recibe la cantidad vendida, se la resta al stock actual del producto y, si llega a cero, cambia automáticamente el estado a RETIRADO. Si alguien intenta vender más unidades de las que hay en stock, el backend devuelve un mensaje de error claro que el frontend muestra al usuario.
+
+Mejora 10 — Panel de venta inline en la lista de productos
+
+En el frontend, cada producto que tenga stock disponible y no esté caducado ni retirado muestra un botón "Vender" al cajero. Al pulsarlo, aparece una fila justo debajo del producto (sin cambiar de pantalla) con un campo numérico para poner las unidades vendidas y los botones de confirmar o cancelar. Si la venta va bien, el stock se actualiza en esa misma fila sin recargar toda la tabla. Me pareció más cómodo que abrir un formulario aparte.
+
+Mejora 11 — Botones de editar y eliminar cambiados a iconos (idea de Daniel)
+
+Los botones de texto "Editar" y "Eliminar" ocupaban demasiado espacio en la columna de acciones. La idea de Daniel fue cambiarlos por iconos, que visualmente quedan mucho mejor y ahorran espacio. Usé Bootstrap Icons (incluido como CDN en el index.html): el lápiz para editar y la papelera para eliminar.
+
+Mejora 12 — Buscador de productos
+
+Añadí un buscador encima de la tabla con dos campos: uno para filtrar por nombre y otro por número de lote. El filtrado es instantáneo mientras el usuario escribe, sin ninguna petición al servidor. Cuando hay algo escrito en alguno de los dos campos aparece un botón "Limpiar" para resetear los filtros.
+
+Mejora 13 — Menú hamburguesa en móvil
+
+La vista de productos no funcionaba bien en pantallas pequeñas porque el sidebar siempre estaba visible. Añadí un menú hamburguesa que aparece en la parte superior en móvil. Al pulsarlo se abre el sidebar con un overlay oscuro detrás. Al hacer clic en el overlay o al navegar a otra sección, el sidebar se cierra solo.
+
+
+-- Despliegue en Railway (mayo de 2026) --
+
+Llegó el momento de publicar la aplicación en un servidor real para que se pueda usar desde fuera. Usé Railway, que permite desplegar aplicaciones directamente desde contenedores Docker.
+
+Dockerfile del backend
+
+Hice el Dockerfile del backend en dos etapas: la primera usa Java 25 con Maven para compilar y generar el JAR, y la segunda usa solo el JRE (más ligero) para ejecutarlo. Tuve que darle permisos de ejecución al archivo mvnw con chmod +x porque Railway corre en Linux y sin ese permiso no arrancaba.
+
+Dockerfile y nginx.conf del frontend
+
+El frontend también tiene su Dockerfile en dos etapas: Node 22 para compilar Angular y nginx para servir los archivos estáticos en el puerto 8080, que es el que Railway espera. Creé un nginx.conf sencillo con try_files para que el router de Angular funcione bien cuando alguien accede directamente a una subruta de la aplicación.
+
+Archivos de entorno (environment.ts y environment.prod.ts)
+
+Creé dos archivos de entorno en Angular: uno para desarrollo (apunta a localhost:8080) y otro para producción (apunta a la URL de Railway). Actualicé los tres servicios del frontend para leer la URL base desde ahí. Angular los intercambia automáticamente al compilar en modo producción, así no tengo que cambiar nada manualmente antes de cada despliegue.
+
+application.properties parametrizado
+
+Configuré el backend para leer todas las credenciales desde variables de entorno que Railway inyecta automáticamente: el puerto del servidor, los datos de conexión a MySQL (host, puerto, nombre de base de datos, usuario y contraseña), la clave secreta del JWT y la URL de CORS. Cada variable tiene un valor por defecto para que el proyecto siga funcionando en local sin tener que configurar nada extra.
+
+CORS configurable
+
+Antes tenía la URL del frontend escrita directamente en el código de SecurityConfig. Lo cambié para que se lea desde una variable de entorno (CORS_ORIGIN), con http://localhost:4200 como valor por defecto. En Railway simplemente configuro esa variable con la URL del frontend desplegado y listo.
+
+Problemas con nginx al desplegar
+
+Cuando intenté desplegar el frontend en Railway, nginx no arrancaba. El problema estaba en que el nginx.conf original intentaba leer el puerto desde una variable de entorno usando envsubst, pero las barras invertidas de escape generaban sustituciones incorrectas. Al final lo más fácil fue olvidarme de envsubst y poner el puerto 8080 directamente en el fichero. A veces la solución más simple es la que funciona.
+
+Limpieza de código
+
+Para terminar, eliminé todos los console.log que había dejado durante el desarrollo, limpié el archivo de tests por defecto para que no diese errores al compilar y quité un import de un módulo que ya no existía.
+
